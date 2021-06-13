@@ -369,10 +369,19 @@ namespace XTuleap
             pConnection.DeleteRequest("artifacts/" + this.Id, "");
         }
 
+
+        public void Create(Connection pConnection, TrackerStructure pStructure)
+        {
+            string lCreateData = "{" +
+                                 "  \"tracker\": {\"id\" : " + pStructure.Id + "}}";
+
+            pConnection.PostRequest("artifacts/", lCreateData);
+        }
+
         /// <summary>
         /// Requests all artifacts of the tracker.
         /// </summary>
-        /// <param name="pConnection">The connection</param>
+        /// <param name="pConnection">The connection</plCreateDataaram>
         /// <param name="pTracker">The host tracker</param>
         public void Request(Connection pConnection, ITracker pTracker = null)
         {
