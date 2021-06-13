@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace XTuleap
@@ -43,7 +46,7 @@ namespace XTuleap
             msTypes.Add("cross", TrackerFieldType.Cross);
             msTypes.Add("art_link", TrackerFieldType.ArtifactLinks);
         }
-        
+
         [JsonProperty("field_id")]
         public int Id { get; set; }
 
@@ -82,6 +85,88 @@ namespace XTuleap
         public TrackerField()
         {
             this.EnumValues = new List<EnumEntry>();
+        }
+
+        /// <summary>
+        /// This method encode a value in to value_field JSON format 
+        /// </summary>
+        /// <param name="pValue">The value to encode.</param>
+        /// <returns>The encoded value.</returns>
+        public string EncodeValueField(object pValue)
+        {
+            switch (this.FieldType)
+            {
+                case TrackerFieldType.Int:
+                    {
+                        int lValue = (int)pValue;
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": " + lValue.ToString(CultureInfo.InvariantCulture) + "  }";
+                    }
+
+                case TrackerFieldType.Float:
+                    {
+                        double lValue = (double)pValue;
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": " + lValue.ToString(CultureInfo.InvariantCulture) + "  }";
+                    }
+
+                case TrackerFieldType.DateTime:
+                    {
+                        DateTime lValue = (DateTime)pValue;
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": " + lValue.ToString("o") + "  }";
+                    }
+
+                case TrackerFieldType.String:
+                case TrackerFieldType.Text:
+                    {
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": \"" + pValue.ToString() + "\"  }";
+                    }
+
+                case TrackerFieldType.SingleChoice:
+                    {
+                        EnumEntry lFieldValue = this.EnumValues.First(pItem => pItem.Label == pValue.ToString());
+                        return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" + lFieldValue.Id + "]  }";
+                    }
+
+                case TrackerFieldType.MultipleChoice:
+                    {
+                        List<string> lValues = pValue as List<string>;
+                        List<int> lEntryIds = new List<int>();
+                        foreach (var lValue in lValues)
+                        {
+                            EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == lValue);
+                            if (lFieldValue != null)
+                            {
+                                lEntryIds.Add(lFieldValue.Id);
+                            }
+                        }
+
+                        if (lEntryIds.Any())
+                        {
+                            return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" + string.Join(",", lEntryIds) + "]  }";
+                        }
+                    }
+                    break;
+
+                case TrackerFieldType.ArtifactLinks:
+                    {
+                        List<string> lValues = pValue as List<string>;
+
+                        List<string> lLinkStr = new List<string>();
+                        foreach (var lValue in lValues)
+                        {
+                            lLinkStr.Add("{\"id\" :" + lValue + '}');
+                        }
+
+                        return "  {  \"field_id\": " + this.Id + ", \"links\": [" + string.Join(",", lLinkStr) + "]  }";
+                    }
+
+                default:
+                    {
+                        throw new NotSupportedException("Type not managed when encoding " + this.FieldType);
+                    }
+
+            }
+
+            return string.Empty;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -115,7 +116,7 @@ namespace XTuleap
         /// <param name="pData">The data (optional)</param>
         /// <param name="pTimeout">The timeout in milliseconds</param>
 
-        public void PutRequest(string pRelative, string pData, int pTimeout = 60000)
+        public string PutRequest(string pRelative, string pData, int pTimeout = 60000)
         {
             try
             {
@@ -132,14 +133,20 @@ namespace XTuleap
                 lRequestStream.Close();
                
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
+                Stream lReceiveStream = lWebResponse.GetResponseStream();
+                StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
+                string lContent = lReader.ReadToEnd();
                 lWebResponse.Close();
+                return lContent;
 
-                
+
             }
             catch (Exception lException)
             {
                 Console.WriteLine(lException);
             }
+
+            return null;
         }
 
         /// <summary>
@@ -149,12 +156,13 @@ namespace XTuleap
         /// <param name="pData">The data (optional)</param>
         /// <param name="pTimeout">The timeout in milliseconds</param>
 
-        public void PostRequest(string pRelative, string pData, int pTimeout = 60000)
+        public string PostRequest(string pRelative, string pData, int pTimeout = 60000)
         {
             try
             {
                 string lUrl = this.Url + pRelative;
                 HttpWebRequest lRequest = (HttpWebRequest)WebRequest.Create(lUrl);
+                lRequest.Accept = "application/json";
                 lRequest.ContentType = "application/json; charset=UTF-8";
                 lRequest.Headers.Add("X-Auth-AccessKey", this.SSHKey);
                 Byte[] lData = Encoding.UTF8.GetBytes(pData);
@@ -166,14 +174,31 @@ namespace XTuleap
                 lRequestStream.Close();
                
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
+                Stream lReceiveStream = lWebResponse.GetResponseStream();
+                StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
+                string lContent = lReader.ReadToEnd();
                 lWebResponse.Close();
+                return lContent;
 
-                
+
             }
-            catch (Exception lException)
+            catch (WebException lException)
             {
+                if (lException.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)lException.Response)
+                    {
+                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
+                            string error = reader.ReadToEnd();
+                            //TODO: use JSON.net to parse this string and look at the error message
+                        }
+                    }
+                }
                 Console.WriteLine(lException);
             }
+            return null;
+
         }
 
         /// <summary>
@@ -199,7 +224,9 @@ namespace XTuleap
                 lRequestStream.Close();
                
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
-                //Console.WriteLine(lWebResponse.StatusCode);
+                Stream lReceiveStream = lWebResponse.GetResponseStream();
+                StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
+                string lContent = lReader.ReadToEnd();
                 lWebResponse.Close();
 
                 return true;

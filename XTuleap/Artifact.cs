@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -143,216 +143,14 @@ namespace XTuleap
                 TrackerField lTrackerField = lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == pFieldName.ToLower());
                 if (lTrackerField != null)
                 {
-                    switch (lTrackerField.FieldType)
-                    {
-                        case TrackerFieldType.Int:
-                        {
-                            try
-                            {
-                                int lValue = (int) pValue;
-                                string lUpdateData = "{" +
-                                                     "  \"values\": [" +
-                                                     "  {" +
-                                                     "      \"field_id\": " + lTrackerField.Id + "," +
-                                                     "      \"value\": " + lValue.ToString(CultureInfo.InvariantCulture) + "" +
-                                                     "  }" +
-                                                     "  ]}";
-
-                
-                                pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
-
-                            }
-                            catch (Exception lException)
-                            {
-                                Console.WriteLine("An occured during commit " + lException);
-                            }
-
-                        }
-                            break;
-
-                        case TrackerFieldType.Float:
-                        {
-                            try
-                            {
-                                double lValue =  (double) pValue;
-                                string lUpdateData = "{" +
-                                                     "  \"values\": [" +
-                                                     "  {" +
-                                                     "      \"field_id\": " + lTrackerField.Id + "," +
-                                                     "      \"value\": " + lValue.ToString(CultureInfo.InvariantCulture) + "" +
-                                                     "  }" +
-                                                     "  ]}";
-
-                
-                                pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
-
-                            }
-                            catch (Exception lException)
-                            {
-                                Console.WriteLine("An occured during commit " + lException);
-                            }
-
-                        }
-                            break;
-
-                        case TrackerFieldType.DateTime:
-                        {
-                            try
-                            {
-                                DateTime lValue =  (DateTime) pValue;
-                                string lUpdateData = "{" +
-                                                     "  \"values\": [" +
-                                                     "  {" +
-                                                     "      \"field_id\": " + lTrackerField.Id + "," +
-                                                     "      \"value\": \"" + lValue.ToString("o") + "\"" +
-                                                     "  }" +
-                                                     "  ]}";
-
-                
-                                pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
-
-                            }
-                            catch (Exception lException)
-                            {
-                                Console.WriteLine("An occured during commit " + lException);
-                            }
-
-                        }
-                            break;
-
-                        case TrackerFieldType.String:
-                        case TrackerFieldType.Text:
-                        {
-                            try
-                            {
-                                string lUpdateData = "{" +
-                                                   "  \"values\": [" +
-                                                   "  {" +
-                                                   "      \"field_id\": " + lTrackerField.Id + "," +
-                                                   "      \"value\": \"" + pValue.ToString() + "\"" +
-                                                   "  }" +
-                                                   "  ]}";
-
-                
-                                pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
-
-                            }
-                            catch (Exception lException)
-                            {
-                                Console.WriteLine("An occured during commit " + lException);
-                            }
-
-                        }
-                            break;
+                    string lUpdateData = "{" +
+                                         "  \"values\": [" +
+                                         lTrackerField.EncodeValueField(pValue) +
+                                         "  ]}";
 
 
-                        case TrackerFieldType.SingleChoice:
-                        {
-                            try
-                            {
-                                EnumEntry lFieldValue = lTrackerField.EnumValues.First(pItem => pItem.Label == pValue.ToString());
-                                string lUpdateData = "{" +
-                                                     "  \"values\": [" +
-                                                     "  {" +
-                                                     "      \"field_id\": " + lTrackerField.Id + "," +
-                                                     "      \"bind_value_ids\": [" + lFieldValue.Id + "]" +
-                                                     "  }" +
-                                                     "  ]}";
+                    pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
 
-                
-                                pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
-
-                            }
-                            catch (Exception lException)
-                            {
-                                Console.WriteLine("An occured during commit " + lException);
-                            }
-
-                        }
-                            break;
-
-
-                        case TrackerFieldType.MultipleChoice:
-                        {
-                            try
-                            {
-                                List<string> lValues = pValue as List<string>;
-                                List<int> lEntryIds = new List<int>();
-                                foreach (var lValue in lValues)
-                                {
-                                    EnumEntry lFieldValue = lTrackerField.EnumValues.FirstOrDefault(pItem => pItem.Label == lValue);
-                                    if (lFieldValue != null)
-                                    {
-                                        lEntryIds.Add(lFieldValue.Id);
-                                    }
-                                }
-
-
-                                if (lEntryIds.Any())
-                                {
-                                    string lUpdateData = "{" +
-                                                         "  \"values\": [" +
-                                                         "  {" +
-                                                         "      \"field_id\": " + lTrackerField.Id + "," +
-                                                         "      \"bind_value_ids\": [" + string.Join(",", lEntryIds) + "]" +
-                                                         "  }" +
-                                                         "  ]}";
-
-                
-                                    pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
-                                }
-                            }
-                            catch (Exception lException)
-                            {
-                                Console.WriteLine("An occured during commit " + lException);
-                            }
-
-                        }
-                            break;
-
-                        case TrackerFieldType.ArtifactLinks:
-                        {
-                            try
-                            {
-                                List<string> lValues = pValue as List<string>;
-
-                                List<string> lLinkStr = new List<string>();
-                                foreach (var lValue in lValues)
-                                {
-                                    lLinkStr.Add("{\"id\" :" + lValue + '}');
-                                }
-
-
-                                string lUpdateData = "{" +
-                                                     "  \"values\": [" +
-                                                     "  {" +
-                                                     "      \"field_id\": " + lTrackerField.Id + "," +
-                                                     "      \"links\": [" + string.Join(",", lLinkStr) + "]" +
-                                                     "  }" +
-                                                     "  ]}";
-
-                
-                                pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
-
-                            }
-                            catch (Exception lException)
-                            {
-                                Console.WriteLine("An occured during commit " + lException);
-                            }
-
-                        }
-                            break;
-
-
-
-                        default:
-                        {
-                                Console.WriteLine("Type not managed on commit " + lTrackerField.FieldType);
-                        }
-                            break;
-                    }
-
-                    
                 }
                 return true;
             }
@@ -370,12 +168,32 @@ namespace XTuleap
         }
 
 
-        public void Create(Connection pConnection, TrackerStructure pStructure)
+        /// <summary>
+        /// Creates an artifact.
+        /// </summary>
+        /// <param name="pConnection">The connection.</param>
+        /// <param name="pStructure">The tracker structure</param>
+        /// <param name="pValues">The list of values</param>
+        public void Create(Connection pConnection, TrackerStructure pStructure, Dictionary<string, object> pValues)
         {
-            string lCreateData = "{" +
-                                 "  \"tracker\": {\"id\" : " + pStructure.Id + "}}";
+            string lCreateData = "{\"tracker\": {\"id\" : " + pStructure.Id + "},";
+            lCreateData += "\"values\": [";
+            foreach (var lValue in pValues)
+            {
+                TrackerField lTrackerField = pStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
+                if (lTrackerField != null)
+                {
+                    lCreateData += lTrackerField.EncodeValueField(lValue.Value);
+                }
 
-            pConnection.PostRequest("artifacts/", lCreateData);
+                lCreateData += ",";
+            }
+            lCreateData = lCreateData.Remove(lCreateData.Length - 1);
+            lCreateData += "]}";
+            string lResult = pConnection.PostRequest("artifacts", lCreateData);
+            JObject lResponse = JObject.Parse(lResult);
+
+            this.Id = Convert.ToInt32(lResponse["id"]);
         }
 
         /// <summary>
@@ -524,16 +342,16 @@ namespace XTuleap
 
 
                                 case TrackerFieldType.Text:
-                                {
-                                    try
                                     {
-                                        this.StoreValue(lTrackerField.Name, lToken.Value<string>("value"));
+                                        try
+                                        {
+                                            this.StoreValue(lTrackerField.Name, lToken.Value<string>("value"));
+                                        }
+                                        catch
+                                        {
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
                                     }
-                                    catch
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
                                     break;
 
                                 case TrackerFieldType.DateTime:
@@ -573,54 +391,54 @@ namespace XTuleap
                                     break;
 
                                 case TrackerFieldType.Float:
-                                {
-                                    try
                                     {
-                                        this.StoreValue(lTrackerField.Name, lToken.Value<float>("value"));
+                                        try
+                                        {
+                                            this.StoreValue(lTrackerField.Name, lToken.Value<float>("value"));
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
                                     }
-                                    catch (Exception e)
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
                                     break;
 
                                 case TrackerFieldType.ArtifactLinks:
-                                {
-                                    List<ArtifactLink> lLinks = new List<ArtifactLink>();
-                                    foreach (var lSubToken in lToken["links"])
                                     {
-                                        ArtifactLink lLink = new ArtifactLink
+                                        List<ArtifactLink> lLinks = new List<ArtifactLink>();
+                                        foreach (var lSubToken in lToken["links"])
                                         {
-                                            Id = (int)lSubToken["id"]
-                                        };
-                                        lLinks.Add(lLink);
+                                            ArtifactLink lLink = new ArtifactLink
+                                            {
+                                                Id = (int)lSubToken["id"]
+                                            };
+                                            lLinks.Add(lLink);
+                                        }
+                                        this.StoreValue(lTrackerField.Name, lLinks);
                                     }
-                                    this.StoreValue(lTrackerField.Name, lLinks);
-                                }
                                     break;
 
                                 case TrackerFieldType.Cross:
-                                {
-                                    List<ArtifactLink> lLinks = new List<ArtifactLink>();
-                                    foreach (var lSubToken in lToken["value"])
                                     {
-                                        ArtifactLink lLink = new ArtifactLink
+                                        List<ArtifactLink> lLinks = new List<ArtifactLink>();
+                                        foreach (var lSubToken in lToken["value"])
                                         {
-                                            Reference = lSubToken["ref"].ToString(),
-                                            Url = lSubToken["url"].ToString()
-                                        };
-                                        lLinks.Add(lLink);
+                                            ArtifactLink lLink = new ArtifactLink
+                                            {
+                                                Reference = lSubToken["ref"].ToString(),
+                                                Url = lSubToken["url"].ToString()
+                                            };
+                                            lLinks.Add(lLink);
+                                        }
+                                        this.StoreValue(lTrackerField.Name, lLinks);
                                     }
-                                    this.StoreValue(lTrackerField.Name, lLinks);
-                                }
                                     break;
 
 
                                 case TrackerFieldType.Unknown:
-                                {
-                                    //Console.WriteLine("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
-                                }
+                                    {
+                                        //Console.WriteLine("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
+                                    }
                                     break;
                             }
                         }
@@ -648,7 +466,7 @@ namespace XTuleap
                     {
                         lBuilder.AppendLine("[" + lDataValue.Key + "] = " + lDataValue.Value);
                     }
-                    
+
                 }
             }
             return lBuilder.ToString();
