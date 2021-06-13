@@ -7,9 +7,10 @@
     <PackageProjectUrl>https://github.com/mastertnt/XTuleap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mastertnt/XTuleap</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
     <Version>1.0.1</Version>
+    <PackageReleaseNotes>1.1.0 : Manage creation of artifact</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
