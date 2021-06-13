@@ -9,7 +9,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.0.1</Version>
+    <Version>1.1.0.0</Version>
     <PackageReleaseNotes>1.1.0 : Manage creation of artifact</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
