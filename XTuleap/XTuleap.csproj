@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
     <Description>A library to have access to tuleap (www.tuleap.org) from .NET</Description>
     <PackageIcon>Tuleap_Icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/mastertnt/XTuleap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mastertnt/XTuleap</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0.0</Version>
-    <PackageReleaseNotes>1.1.0 : Manage creation of artifact</PackageReleaseNotes>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.0</Version>
+    <PackageReleaseNotes>1.2.0 : Change version to .net standard</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
