@@ -118,6 +118,11 @@ namespace XTuleap
         public List<int> ArtifactIds { get; private set; }
 
         /// <summary>
+        /// Event raised when an artifact has been retrieved.
+        /// </summary>
+        public event Action<Artifact> ArtifactRetrieved;
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="pStructure">The structure of the tracker.</param>
@@ -167,6 +172,10 @@ namespace XTuleap
                 TArtifactType lResult = new TArtifactType {Id = lId};
                 lResult.Request(pConnection, this);
                 this.Artifacts.Add(lResult);
+                if (ArtifactRetrieved != null)
+                {
+                    this.ArtifactRetrieved(lResult);
+                }
             }
         }
     }
