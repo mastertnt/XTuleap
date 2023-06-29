@@ -220,7 +220,6 @@ namespace XTuleap
         public void Request(Connection pConnection, ITracker pTracker = null)
         {
             string lArtifactContent = pConnection.GetRequest("artifacts/" + this.Id + "?values_format=collection&tracker_structure_format=complete", "");
-            //File.WriteAllText(@"d:\temp\artifact_" + this.Id + ".json", lArtifactContent);
             TrackerStructure lTrackerStructure = null;
             if (pTracker != null)
             {
@@ -386,7 +385,7 @@ namespace XTuleap
                                                 this.StoreValue(lTrackerField.Name, null);
                                             }
                                         }
-                                        catch (Exception e)
+                                        catch
                                         {
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
@@ -412,7 +411,7 @@ namespace XTuleap
                                         {
                                             this.StoreValue(lTrackerField.Name, lToken.Value<float>("value"));
                                         }
-                                        catch (Exception e)
+                                        catch
                                         {
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
