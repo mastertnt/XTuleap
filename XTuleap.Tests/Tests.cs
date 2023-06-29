@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace XTuleap.Tests
 {
-    [TestFixture]
     public class TuleapTests
     {
         private string mUri = "https://tuleap.net/api/";
@@ -13,7 +12,7 @@ namespace XTuleap.Tests
 
         private int mSimpleTrackerId = 867;
 
-        [Test]
+        [Fact]
         public void CreateSimpleArtifact()
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);
@@ -32,17 +31,18 @@ namespace XTuleap.Tests
             TrackerStructure lTargetStructure1 = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
             Tracker<Artifact> lTargetTracker1 = new Tracker<Artifact>(lTargetStructure1);
             lTargetTracker1.PreviewRequest(lConnection1);
-            Assert.AreEqual(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count + 1);
+            Assert.Equal(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count + 1);
 
             Artifact lResult = new Artifact { Id = lNewArtifact.Id };
             lResult.Request(lConnection1, lTargetTracker1);
 
-            Assert.AreEqual(lNewArtifact.Id, lResult.Id);
-            Assert.AreEqual(lResult.GetFieldValue<string>("string"), "string_value");
-            Assert.AreEqual(lResult.GetFieldValue<int>("int"), 77);
-            Assert.AreEqual(lResult.GetFieldValue<float>("float"), 0.77, 0.01);
+            Assert.Equal(lNewArtifact.Id, lResult.Id);
+            Assert.Equal(lResult.GetFieldValue<string>("string"), "string_value");
+            Assert.Equal(lResult.GetFieldValue<int>("int"), 77);
+            Assert.Equal(lResult.GetFieldValue<float>("float"), 0.77, 0.01);
         }
 
+        [Fact]
         public void UpdateString()
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);
@@ -58,15 +58,16 @@ namespace XTuleap.Tests
             TrackerStructure lTargetStructure1 = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
             Tracker<Artifact> lTargetTracker1 = new Tracker<Artifact>(lTargetStructure1);
             lTargetTracker1.PreviewRequest(lConnection1);
-            Assert.AreEqual(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count);
+            Assert.Equal(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count);
 
             Artifact lResult = new Artifact(this.mSimpleTrackerId) { Id = lArtifactToUpdate.Id };
             lResult.Request(lConnection1, lTargetTracker1);
 
-            Assert.AreEqual(lArtifactToUpdate.Id, lResult.Id);
-            Assert.AreEqual(lResult.GetFieldValue<string>("string"), "updated_string_value");
+            Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
+            Assert.Equal(lResult.GetFieldValue<string>("string"), "updated_string_value");
         }
 
+        [Fact]
         public void UpdateReference()
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);
@@ -82,13 +83,13 @@ namespace XTuleap.Tests
             TrackerStructure lTargetStructure1 = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
             Tracker<Artifact> lTargetTracker1 = new Tracker<Artifact>(lTargetStructure1);
             lTargetTracker1.PreviewRequest(lConnection1);
-            Assert.AreEqual(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count);
+            Assert.Equal(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count);
 
             Artifact lResult = new Artifact(this.mSimpleTrackerId) { Id = lArtifactToUpdate.Id };
             lResult.Request(lConnection1, lTargetTracker1);
 
-            Assert.AreEqual(lArtifactToUpdate.Id, lResult.Id);
-            Assert.AreEqual(lResult.GetFieldValue<List<ArtifactLink>>("references").First().Id, lTargetTracker.ArtifactIds.Last());
+            Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
+            Assert.Equal(lResult.GetFieldValue<List<ArtifactLink>>("references").First().Id, lTargetTracker.ArtifactIds.Last());
         }
     }
 }
