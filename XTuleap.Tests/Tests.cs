@@ -1,11 +1,5 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using NUnit;
 using NUnit.Framework;
 
 namespace XTuleap.Tests
@@ -18,8 +12,6 @@ namespace XTuleap.Tests
         private string mKey = "tlp-k1-74.0938e677298d61a90d7a50246dfbce060eaa752b7298de23f5b233569aca766a";
 
         private int mSimpleTrackerId = 867;
-
-        private int mCrossTrackerId = 867;
 
         [Test]
         public void CreateSimpleArtifact()
