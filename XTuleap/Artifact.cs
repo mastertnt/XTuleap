@@ -65,6 +65,19 @@ namespace XTuleap
             set;
         }
 
+        public Artifact(int pTrackerId)
+        {
+            this.TrackerId = pTrackerId;
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Artifact()
+        {
+            this.TrackerId = -1;
+        }
+
         /// <summary>
         /// Gets a field value.
         /// </summary>
@@ -135,7 +148,7 @@ namespace XTuleap
         /// <param name="pConnection">The connection.</param>
         /// <param name="pFieldName">The field name.</param>
         /// <param name="pValue">The value to set.</param>
-        public bool CommitValue(Connection pConnection, string pFieldName, object pValue)
+        public bool Update(Connection pConnection, string pFieldName, object pValue)
         {
             TrackerStructure lStructure = pConnection.TrackerStructures.FirstOrDefault(pTracker => pTracker.Id == this.TrackerId);
             if (lStructure != null)
@@ -172,34 +185,37 @@ namespace XTuleap
         /// Creates an artifact.
         /// </summary>
         /// <param name="pConnection">The connection.</param>
-        /// <param name="pStructure">The tracker structure</param>
         /// <param name="pValues">The list of values</param>
-        public void Create(Connection pConnection, TrackerStructure pStructure, Dictionary<string, object> pValues)
+        public void Create(Connection pConnection, Dictionary<string, object> pValues)
         {
-            string lCreateData = "{\"tracker\": {\"id\" : " + pStructure.Id + "},";
-            lCreateData += "\"values\": [";
-            foreach (var lValue in pValues)
+            TrackerStructure lStructure = pConnection.TrackerStructures.FirstOrDefault(pTracker => pTracker.Id == this.TrackerId);
+            if (lStructure != null)
             {
-                TrackerField lTrackerField = pStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
-                if (lTrackerField != null)
+                string lCreateData = "{\"tracker\": {\"id\" : " + this.TrackerId + "},";
+                lCreateData += "\"values\": [";
+                foreach (var lValue in pValues)
                 {
-                    lCreateData += lTrackerField.EncodeValueField(lValue.Value);
+                    TrackerField lTrackerField = lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
+                    if (lTrackerField != null)
+                    {
+                        lCreateData += lTrackerField.EncodeValueField(lValue.Value);
+                    }
+
+                    lCreateData += ",";
                 }
+                lCreateData = lCreateData.Remove(lCreateData.Length - 1);
+                lCreateData += "]}";
+                string lResult = pConnection.PostRequest("artifacts", lCreateData);
+                JObject lResponse = JObject.Parse(lResult);
 
-                lCreateData += ",";
+                this.Id = Convert.ToInt32(lResponse["id"]);
             }
-            lCreateData = lCreateData.Remove(lCreateData.Length - 1);
-            lCreateData += "]}";
-            string lResult = pConnection.PostRequest("artifacts", lCreateData);
-            JObject lResponse = JObject.Parse(lResult);
-
-            this.Id = Convert.ToInt32(lResponse["id"]);
         }
 
         /// <summary>
         /// Requests all artifacts of the tracker.
         /// </summary>
-        /// <param name="pConnection">The connection</plCreateDataaram>
+        /// <param name="pConnection">The connection</param>
         /// <param name="pTracker">The host tracker</param>
         public void Request(Connection pConnection, ITracker pTracker = null)
         {

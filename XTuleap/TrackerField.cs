@@ -148,7 +148,7 @@ namespace XTuleap
 
                 case TrackerFieldType.ArtifactLinks:
                     {
-                        List<string> lValues = pValue as List<string>;
+                        List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
 
                         List<string> lLinkStr = new List<string>();
                         foreach (var lValue in lValues)
@@ -158,6 +158,19 @@ namespace XTuleap
 
                         return "  {  \"field_id\": " + this.Id + ", \"links\": [" + string.Join(",", lLinkStr) + "]  }";
                     }
+
+                case TrackerFieldType.Cross:
+                {
+                    List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
+
+                    List<string> lLinkStr = new List<string>();
+                    foreach (var lValue in lValues)
+                    {
+                        lLinkStr.Add("{\"ref\" :" + lValue + '}');
+                    }
+
+                    return "  {  \"field_id\": " + this.Id + ", \"value\": [" + string.Join(",", lLinkStr) + "]  }";
+                }
 
                 default:
                     {

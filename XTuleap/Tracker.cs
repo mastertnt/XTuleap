@@ -140,7 +140,6 @@ namespace XTuleap
         public void PreviewRequest(Connection pConnection)
         {
             this.Artifacts.Clear();
-            this.Artifacts.Clear();
             string lTrackerInfo = pConnection.GetRequest("trackers/" + this.Structure.Id, "");
             if (string.IsNullOrEmpty(lTrackerInfo) == false)
             {
@@ -177,6 +176,21 @@ namespace XTuleap
                     this.ArtifactRetrieved(lResult);
                 }
             }
+        }
+
+        /// <summary>
+        /// Delete al artifacts from a tracker.
+        /// </summary>
+        /// <param name="pConnection">The connection.</param>
+        public void DeleteAllArtifacts(Connection pConnection)
+        {
+            this.PreviewRequest(pConnection);
+            foreach (var lArtifactId in this.ArtifactIds)
+            {
+                Artifact lArtifact = new Artifact(this.Structure.Id) { Id = lArtifactId};
+                lArtifact.Delete(pConnection);
+            }
+            this.PreviewRequest(pConnection);
         }
     }
 }

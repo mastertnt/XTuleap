@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\XTuleap.Tests\XTuleap.Tests.csproj" />
     <ProjectReference Include="..\XTuleap\XTuleap.csproj" />
   </ItemGroup>
 
