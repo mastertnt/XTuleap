@@ -164,7 +164,7 @@ namespace XTuleap
         /// <param name="pConnection">The connection</param>
         public void Request(Connection pConnection)
         {
-            foreach (var lId in this.ArtifactIds)
+            foreach (int lId in this.ArtifactIds)
             {
                 TArtifactType lResult = new TArtifactType {Id = lId};
                 lResult.Request(pConnection, this);
@@ -183,7 +183,7 @@ namespace XTuleap
         public void DeleteAllArtifacts(Connection pConnection)
         {
             this.PreviewRequest(pConnection);
-            foreach (var lArtifactId in this.ArtifactIds)
+            foreach (int lArtifactId in this.ArtifactIds)
             {
                 Artifact lArtifact = new Artifact(this.Structure.Id) { Id = lArtifactId};
                 lArtifact.Delete(pConnection);

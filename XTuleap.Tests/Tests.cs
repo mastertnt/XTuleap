@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Xunit;
 
 namespace XTuleap.Tests
@@ -90,6 +92,42 @@ namespace XTuleap.Tests
 
             Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
             Assert.Equal(lResult.GetFieldValue<List<ArtifactLink>>("references").First().Id, lTargetTracker.ArtifactIds.Last());
+        }
+
+        private static int RandomId(List<int> pArtifactIds)
+        {
+            Random lRandom = new Random();
+            return pArtifactIds.ElementAt(lRandom.Next(0, pArtifactIds.Count));
+        }
+
+        [Fact]
+        public void UpdateReferences()
+        {
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            lTargetTracker.PreviewRequest(lConnection);
+
+            int lTargetId = RandomId(lTargetTracker.ArtifactIds);
+            int lFirst = RandomId(lTargetTracker.ArtifactIds);
+            int lSecond = RandomId(lTargetTracker.ArtifactIds);
+
+            Artifact lArtifactToUpdate = new Artifact(this.mSimpleTrackerId) { Id = lTargetId };
+            lArtifactToUpdate.Update(lConnection, "references", new List<ArtifactLink>() { new ArtifactLink() { Id = lFirst }, new ArtifactLink() { Id = lSecond } });
+
+
+            Connection lConnection1 = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure1 = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker1 = new Tracker<Artifact>(lTargetStructure1);
+            lTargetTracker1.PreviewRequest(lConnection1);
+            Assert.Equal(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count);
+
+            Artifact lResult = new Artifact(this.mSimpleTrackerId) { Id = lArtifactToUpdate.Id };
+            lResult.Request(lConnection1, lTargetTracker1);
+
+            Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
+            Assert.Contains(lFirst, lResult.GetFieldValue<List<ArtifactLink>>("references").Select(pRes => pRes.Id));
+            Assert.Contains(lSecond, lResult.GetFieldValue<List<ArtifactLink>>("references").Select(pRes => pRes.Id));
         }
     }
 }

@@ -183,9 +183,9 @@ namespace XTuleap
             {
                 if (lException.Response != null)
                 {
-                    using (var errorResponse = (HttpWebResponse)lException.Response)
+                    using (HttpWebResponse errorResponse = (HttpWebResponse)lException.Response)
                     {
-                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
                         {
                             string error = reader.ReadToEnd();
                             //TODO: use JSON.net to parse this string and look at the error message

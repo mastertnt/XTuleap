@@ -192,7 +192,7 @@ namespace XTuleap
             {
                 string lCreateData = "{\"tracker\": {\"id\" : " + this.TrackerId + "},";
                 lCreateData += "\"values\": [";
-                foreach (var lValue in pValues)
+                foreach (KeyValuePair<string, object> lValue in pValues)
                 {
                     TrackerField lTrackerField = lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
                     if (lTrackerField != null)
@@ -242,7 +242,7 @@ namespace XTuleap
                     this.TrackerId = lObject["tracker"].Value<int>("id");
                     this.mDataValues.Add("aid", lObject.Value<int>("id"));
                     this.mDataValues.Add("xref", lObject.Value<string>("xref"));
-                    foreach (var lTrackerField in lTrackerStructure.Fields)
+                    foreach (TrackerField lTrackerField in lTrackerStructure.Fields)
                     {
                         JToken lToken = lObject["values"].Children().FirstOrDefault(pToken => pToken["field_id"] != null && pToken["field_id"].ToString() == lTrackerField.Id.ToString());
                         if (lToken == null)
@@ -301,7 +301,7 @@ namespace XTuleap
                                         if (lToken["values"] != null && lToken["values"].Count() != 0)
                                         {
                                             List<string> lValues = new List<string>();
-                                            foreach (var lValueItem in lToken["values"])
+                                            foreach (JToken lValueItem in lToken["values"])
                                             {
                                                 if (lValueItem["id"] != null)
                                                 {
@@ -420,7 +420,7 @@ namespace XTuleap
                                 case TrackerFieldType.ArtifactLinks:
                                     {
                                         List<ArtifactLink> lLinks = new List<ArtifactLink>();
-                                        foreach (var lSubToken in lToken["links"])
+                                        foreach (JToken lSubToken in lToken["links"])
                                         {
                                             ArtifactLink lLink = new ArtifactLink
                                             {
@@ -435,7 +435,7 @@ namespace XTuleap
                                 case TrackerFieldType.Cross:
                                     {
                                         List<ArtifactLink> lLinks = new List<ArtifactLink>();
-                                        foreach (var lSubToken in lToken["value"])
+                                        foreach (JToken lSubToken in lToken["value"])
                                         {
                                             ArtifactLink lLink = new ArtifactLink
                                             {
@@ -468,7 +468,7 @@ namespace XTuleap
         {
             StringBuilder lBuilder = new StringBuilder();
             lBuilder.AppendLine("[aid] = " + this.Id);
-            foreach (var lDataValue in this.mDataValues)
+            foreach (KeyValuePair<string, object> lDataValue in this.mDataValues)
             {
                 if (lDataValue.Key != "aid")
                 {

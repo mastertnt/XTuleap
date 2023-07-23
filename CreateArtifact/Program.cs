@@ -1,15 +1,15 @@
 ﻿using XTuleap.Tests;
 
-namespace CreateArtifact
+namespace XTuleap.TestLauncher
 {
     class Program
     {
         static void Main(string[] args)
         {
             TuleapTests lTest = new TuleapTests();
-            lTest.CreateSimpleArtifact();
-            lTest.UpdateString();
-            lTest.UpdateReference();
+            //lTest.CreateSimpleArtifact();
+            //lTest.UpdateString();
+            lTest.UpdateReferences();
         }
     }
 }

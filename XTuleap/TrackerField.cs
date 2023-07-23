@@ -130,7 +130,7 @@ namespace XTuleap
                     {
                         List<string> lValues = pValue as List<string>;
                         List<int> lEntryIds = new List<int>();
-                        foreach (var lValue in lValues)
+                        foreach (string lValue in lValues)
                         {
                             EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == lValue);
                             if (lFieldValue != null)
@@ -151,7 +151,7 @@ namespace XTuleap
                         List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
 
                         List<string> lLinkStr = new List<string>();
-                        foreach (var lValue in lValues)
+                        foreach (ArtifactLink lValue in lValues)
                         {
                             lLinkStr.Add("{\"id\" :" + lValue + '}');
                         }
@@ -164,7 +164,7 @@ namespace XTuleap
                     List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
 
                     List<string> lLinkStr = new List<string>();
-                    foreach (var lValue in lValues)
+                    foreach (ArtifactLink lValue in lValues)
                     {
                         lLinkStr.Add("{\"ref\" :" + lValue + '}');
                     }
