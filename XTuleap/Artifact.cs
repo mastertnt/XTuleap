@@ -216,7 +216,7 @@ namespace XTuleap
         /// </summary>
         /// <param name="pConnection">The connection</param>
         /// <param name="pTracker">The host tracker</param>
-        public void Request(Connection pConnection, ITracker pTracker = null)
+        public virtual void Request(Connection pConnection, ITracker pTracker = null)
         {
             string lArtifactContent = pConnection.GetRequest("artifacts/" + this.Id + "?values_format=collection&tracker_structure_format=complete", "");
             TrackerStructure lTrackerStructure = null;

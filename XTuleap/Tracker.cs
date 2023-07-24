@@ -169,7 +169,7 @@ namespace XTuleap
                 TArtifactType lResult = new TArtifactType {Id = lId};
                 lResult.Request(pConnection, this);
                 this.Artifacts.Add(lResult);
-                if (ArtifactRetrieved != null)
+                if (this.ArtifactRetrieved != null)
                 {
                     this.ArtifactRetrieved(lResult);
                 }
