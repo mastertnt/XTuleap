@@ -194,8 +194,7 @@ namespace XTuleap
         /// <param name="pValues">The list of values</param>
         public void Create(Connection pConnection, Dictionary<string, object> pValues)
         {
-            TrackerStructure lStructure =
-                pConnection.TrackerStructures.FirstOrDefault(pTracker => pTracker.Id == this.TrackerId);
+            TrackerStructure lStructure = pConnection.TrackerStructures.FirstOrDefault(pTracker => pTracker.Id == this.TrackerId);
             if (lStructure != null)
             {
                 string lCreateData = "{\"tracker\": {\"id\" : " + this.TrackerId + "},";
