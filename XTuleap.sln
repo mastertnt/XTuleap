@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTuleap", "XTuleap\XTuleap.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTuleap.TestLauncher", "CreateArtifact\XTuleap.TestLauncher.csproj", "{7AB12B6E-F109-4FA7-8057-D6D08F5571E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTuleap.Tests", "XTuleap.Tests\XTuleap.Tests.csproj", "{DF2D0AF4-08A5-41B8-9345-C5461712E5DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTuleap.Tests", "XTuleap.Tests\XTuleap.Tests.csproj", "{DF2D0AF4-08A5-41B8-9345-C5461712E5DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

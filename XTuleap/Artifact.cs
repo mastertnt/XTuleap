@@ -14,7 +14,7 @@ namespace XTuleap
     /// <summary>
     ///     This class represents an artifact.
     /// </summary>
-    public class Artifact
+    public class Artifact : INotifyPropertyChanged
     {
         /// <summary>
         ///     A constant for INVALID_ARTIFACT.
@@ -497,5 +497,10 @@ namespace XTuleap
 
             return lBuilder.ToString();
         }
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

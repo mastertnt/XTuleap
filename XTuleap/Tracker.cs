@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,7 +11,7 @@ namespace XTuleap
     /// <summary>
     ///     This class represents a tracker in Tuleap.
     /// </summary>
-    public class Tracker<TArtifactType> : ITracker where TArtifactType : Artifact, new()
+    public class Tracker<TArtifactType> : INotifyPropertyChanged, ITracker where TArtifactType : Artifact, new()
     {
         /// <summary>
         ///     Default constructor.
@@ -148,5 +149,10 @@ namespace XTuleap
 
             this.PreviewRequest(pConnection);
         }
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
