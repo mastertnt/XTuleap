@@ -24,7 +24,7 @@ namespace XTuleap
         /// <summary>
         ///     This dictionary stores the values non wrapped by child class.
         /// </summary>
-        private readonly Dictionary<string?, object> mDataValues = new Dictionary<string?, object>();
+        private readonly Dictionary<string?, object?> mDataValues = new Dictionary<string?, object?>();
 
         public Artifact(int pTrackerId)
         {
@@ -43,7 +43,7 @@ namespace XTuleap
         ///     Gets the id of artifact.
         /// </summary>
         [JsonProperty("id")]
-        public int Id
+        public virtual int Id
         {
             get;
             set;
@@ -52,7 +52,7 @@ namespace XTuleap
         /// <summary>
         ///     Gets the tracker name.
         /// </summary>
-        public string TrackerName
+        public string? TrackerName
         {
             get;
             private set;
@@ -71,7 +71,7 @@ namespace XTuleap
         ///     Gets the links.
         /// </summary>
         [DisplayName("links")]
-        public List<ArtifactLink> Links
+        public List<ArtifactLink>? Links
         {
             get;
             set;
@@ -91,7 +91,7 @@ namespace XTuleap
 
             PropertyInfo[] lPropertyInfos = this.GetType().GetProperties()
                 .Where(pProp => pProp.IsDefined(typeof(DisplayNameAttribute), false)).ToArray();
-            PropertyInfo lPropertyInfo = lPropertyInfos.FirstOrDefault(pProp =>
+            PropertyInfo lPropertyInfo = lPropertyInfos.FirstOrDefault(pProp => 
                 (pProp.GetCustomAttributes(typeof(DisplayNameAttribute), false).First() as DisplayNameAttribute)
                 ?.DisplayName == pFieldName);
             if (lPropertyInfo != null)
@@ -129,7 +129,7 @@ namespace XTuleap
         /// </summary>
         /// <param name="pFieldName">The field name.</param>
         /// <param name="pValue">The value to set.</param>
-        private void StoreValue(string? pFieldName, object pValue)
+        private void StoreValue(string? pFieldName, object? pValue)
         {
             PropertyInfo[] lPropertyInfos = this.GetType().GetProperties()
                 .Where(pProp => pProp.IsDefined(typeof(DisplayNameAttribute), false)).ToArray();
@@ -315,7 +315,7 @@ namespace XTuleap
                                 {
                                     if (lToken["values"] != null && lToken["values"].Count() != 0)
                                     {
-                                        List<string> lValues = new List<string>();
+                                        List<string?> lValues = new List<string?>();
                                         foreach (JToken lValueItem in lToken["values"])
                                             if (lValueItem["id"] != null)
                                             {
@@ -432,7 +432,7 @@ namespace XTuleap
 
                                 case TrackerFieldType.ArtifactLinks:
                                 {
-                                    List<ArtifactLink> lLinks = new List<ArtifactLink>();
+                                    List<ArtifactLink>? lLinks = new List<ArtifactLink>();
                                     foreach (JToken lSubToken in lToken["links"])
                                     {
                                         ArtifactLink lLink = new ArtifactLink
@@ -448,7 +448,7 @@ namespace XTuleap
 
                                 case TrackerFieldType.Cross:
                                 {
-                                    List<ArtifactLink> lLinks = new List<ArtifactLink>();
+                                    List<ArtifactLink>? lLinks = new List<ArtifactLink>();
                                     foreach (JToken lSubToken in lToken["value"])
                                     {
                                         ArtifactLink lLink = new ArtifactLink
@@ -483,7 +483,7 @@ namespace XTuleap
         {
             StringBuilder lBuilder = new StringBuilder();
             lBuilder.AppendLine("[aid] = " + this.Id);
-            foreach (KeyValuePair<string?, object> lDataValue in this.mDataValues)
+            foreach (KeyValuePair<string?, object?> lDataValue in this.mDataValues)
                 if (lDataValue.Key != "aid")
                 {
                     if (lDataValue.Value is IEnumerable)

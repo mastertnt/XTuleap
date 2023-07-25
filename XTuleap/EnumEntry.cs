@@ -12,7 +12,7 @@ namespace XTuleap
         }
 
         [JsonProperty("label")]
-        public string Label
+        public string? Label
         {
             get;
             set;
