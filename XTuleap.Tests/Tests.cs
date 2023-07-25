@@ -8,6 +8,12 @@ namespace XTuleap.Tests
 {
     public class TuleapTests
     {
+        enum Test
+        {
+            one,
+            two,
+            three,
+        }
         private readonly string mKey = "tlp-k1-74.0938e677298d61a90d7a50246dfbce060eaa752b7298de23f5b233569aca766a";
         private readonly int mSimpleTrackerId = 867;
         private readonly string mUri = "https://Tuleap.net/api/";
@@ -41,6 +47,33 @@ namespace XTuleap.Tests
             Assert.Equal(lResult.GetFieldValue<string>("string"), "string_value");
             Assert.Equal(lResult.GetFieldValue<int>("int"), 77);
             Assert.Equal(lResult.GetFieldValue<float>("float"), 0.77, 0.01);
+        }
+
+        [Fact]
+        public void CreateArtifactWithEnum()
+        {
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            lTargetTracker.PreviewRequest(lConnection);
+            Artifact lNewArtifact = new Artifact(this.mSimpleTrackerId);
+            Dictionary<string, object> lValues = new Dictionary<string, object>
+            {
+                {"single_choice", Test.one}
+            };
+            lNewArtifact.Create(lConnection, lValues);
+
+            Connection lConnection1 = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure1 = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker1 = new Tracker<Artifact>(lTargetStructure1);
+            lTargetTracker1.PreviewRequest(lConnection1);
+            Assert.Equal(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count + 1);
+
+            Artifact lResult = new Artifact { Id = lNewArtifact.Id };
+            lResult.Request(lConnection1, lTargetTracker1);
+
+            Assert.Equal(lNewArtifact.Id, lResult.Id);
+            Assert.Equal(lResult.GetFieldValue<string>("single_choice"), "one");
         }
 
         [Fact]
