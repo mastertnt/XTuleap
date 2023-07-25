@@ -89,7 +89,7 @@ namespace XTuleap
         /// </summary>
         /// <param name="pRelative">The relative URI according to the URI of the connection.</param>
         /// <param name="pData">The data (optional)</param>
-        /// <returns>The response of the server, null if an exception occured.</returns>
+        /// <returns>The response of the server, null if an exception occurred.</returns>
         public string GetRequest(string pRelative, string pData, int pTimeout = 60000)
         {
             try
@@ -187,14 +187,11 @@ namespace XTuleap
             {
                 if (lException.Response != null)
                 {
-                    using (HttpWebResponse errorResponse = (HttpWebResponse) lException.Response)
-                    {
-                        using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
-                        {
-                            string error = reader.ReadToEnd();
-                            //TODO: use JSON.net to parse this string and look at the error message
-                        }
-                    }
+                    using HttpWebResponse lErrorResponse = (HttpWebResponse) lException.Response;
+                    using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
+                    string lError = lReader.ReadToEnd();
+                    Console.WriteLine(lError);
+                    //TODO: use JSON.net to parse this string and look at the error message
                 }
 
                 Console.WriteLine(lException);
