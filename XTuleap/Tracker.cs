@@ -9,17 +9,23 @@ namespace XTuleap
     public interface ITracker
     {
         /// <summary>
-        /// Gets or sets the name of the tracker.
+        ///     Gets or sets the name of the tracker.
         /// </summary>
-        string Name { get; }
+        string Name
+        {
+            get;
+        }
 
         /// <summary>
-        /// Gets the structure of the tracker.
+        ///     Gets the structure of the tracker.
         /// </summary>
-        TrackerStructure Structure { get; }
+        TrackerStructure Structure
+        {
+            get;
+        }
 
         /// <summary>
-        /// Gets or sets the item name.
+        ///     Gets or sets the item name.
         /// </summary>
         string ItemName
         {
@@ -27,7 +33,7 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Gets or sets the description.
+        ///     Gets or sets the description.
         /// </summary>
         string Description
         {
@@ -35,93 +41,41 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Gets the artifacts.
+        ///     Gets the artifacts.
         /// </summary>
-        List<int> ArtifactIds { get; }
+        List<int> ArtifactIds
+        {
+            get;
+        }
 
         /// <summary>
-        /// Gets the list of base artifacts (untyped).
+        ///     Gets the list of base artifacts (untyped).
         /// </summary>
-        IEnumerable<Artifact> BaseArtifacts { get; }
+        IEnumerable<Artifact> BaseArtifacts
+        {
+            get;
+        }
 
         /// <summary>
-        /// Requests all artifacts of the tracker.
+        ///     Requests all artifacts of the tracker.
         /// </summary>
         /// <param name="pConnection">The connection</param>
         void PreviewRequest(Connection pConnection);
 
         /// <summary>
-        /// Requests all artifacts of the tracker.
+        ///     Requests all artifacts of the tracker.
         /// </summary>
         /// <param name="pConnection">The connection</param>
         void Request(Connection pConnection);
     }
 
     /// <summary>
-    /// This class represents a tracker in TULEAP.
+    ///     This class represents a tracker in Tuleap.
     /// </summary>
     public class Tracker<TArtifactType> : ITracker where TArtifactType : Artifact, new()
     {
         /// <summary>
-        /// Gets or sets the name of the tracker.
-        /// </summary>
-        public string Name
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets or sets the item name.
-        /// </summary>
-        public string ItemName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        public string Description
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the structure of the tracker.
-        /// </summary>
-        public TrackerStructure Structure { get; }
-
-        /// <summary>
-        /// Gets the artifacts.
-        /// </summary>
-        public List<TArtifactType> Artifacts { get; private set; }
-
-        /// <summary>
-        /// Gets the enumeration of base artifacts (untyped).
-        /// </summary>
-        public IEnumerable<Artifact> BaseArtifacts
-        {
-            get
-            {
-                return this.Artifacts;
-            }
-        }
-
-        /// <summary>
-        /// Gets the artifacts.
-        /// </summary>
-        public List<int> ArtifactIds { get; private set; }
-
-        /// <summary>
-        /// Event raised when an artifact has been retrieved.
-        /// </summary>
-        public event Action<Artifact> ArtifactRetrieved;
-
-        /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         /// <param name="pStructure">The structure of the tracker.</param>
         public Tracker(TrackerStructure pStructure)
@@ -132,7 +86,67 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Requests all artifacts of the tracker.
+        ///     Gets the artifacts.
+        /// </summary>
+        public List<TArtifactType> Artifacts
+        {
+            get;
+        }
+
+        /// <summary>
+        ///     Gets or sets the name of the tracker.
+        /// </summary>
+        public string Name
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        ///     Gets or sets the item name.
+        /// </summary>
+        public string ItemName
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        ///     Gets or sets the description.
+        /// </summary>
+        public string Description
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        ///     Gets the structure of the tracker.
+        /// </summary>
+        public TrackerStructure Structure
+        {
+            get;
+        }
+
+        /// <summary>
+        ///     Gets the enumeration of base artifacts (untyped).
+        /// </summary>
+        public IEnumerable<Artifact> BaseArtifacts
+        {
+            get { return this.Artifacts; }
+        }
+
+        /// <summary>
+        ///     Gets the artifacts.
+        /// </summary>
+        public List<int> ArtifactIds
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        ///     Requests all artifacts of the tracker.
         /// </summary>
         /// <param name="pConnection">The connection</param>
         public void PreviewRequest(Connection pConnection)
@@ -159,7 +173,7 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Requests all artifacts of the tracker.
+        ///     Requests all artifacts of the tracker.
         /// </summary>
         /// <param name="pConnection">The connection</param>
         public void Request(Connection pConnection)
@@ -177,7 +191,12 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Delete al artifacts from a tracker.
+        ///     Event raised when an artifact has been retrieved.
+        /// </summary>
+        public event Action<Artifact> ArtifactRetrieved;
+
+        /// <summary>
+        ///     Delete al artifacts from a tracker.
         /// </summary>
         /// <param name="pConnection">The connection.</param>
         public void DeleteAllArtifacts(Connection pConnection)
@@ -185,9 +204,10 @@ namespace XTuleap
             this.PreviewRequest(pConnection);
             foreach (int lArtifactId in this.ArtifactIds)
             {
-                Artifact lArtifact = new Artifact(this.Structure.Id) { Id = lArtifactId};
+                Artifact lArtifact = new Artifact(this.Structure.Id) {Id = lArtifactId};
                 lArtifact.Delete(pConnection);
             }
+
             this.PreviewRequest(pConnection);
         }
     }

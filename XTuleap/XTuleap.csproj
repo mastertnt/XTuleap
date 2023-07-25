@@ -2,16 +2,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <Description>A library to have access to tuleap (www.tuleap.org) from .NET</Description>
+    <Description>A library to have access to Tuleap (www.Tuleap.org) from .NET</Description>
     <PackageIcon>Tuleap_Icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/mastertnt/XTuleap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mastertnt/XTuleap</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>1.4.0.0</AssemblyVersion>
     <FileVersion>1.4.0.0</FileVersion>
-    <Version>1.6.0</Version>
+    <Version>1.6.1</Version>
     <PackageReleaseNotes>1.3.0 : Change version to .net standard
 1.4.0 : Add an event when an artifact has been retrieved on request</PackageReleaseNotes>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

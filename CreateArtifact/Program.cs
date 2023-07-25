@@ -1,15 +1,14 @@
 ﻿using XTuleap.Tests;
 
-namespace XTuleap.TestLauncher
+namespace XTuleap.TestLauncher;
+
+internal class Program
 {
-    class Program
+    private static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            TuleapTests lTest = new TuleapTests();
-            //lTest.CreateSimpleArtifact();
-            //lTest.UpdateString();
-            lTest.UpdateReferences();
-        }
+        TuleapTests lTest = new();
+        //lTest.CreateSimpleArtifact();
+        //lTest.UpdateString();
+        lTest.UpdateReferences();
     }
 }

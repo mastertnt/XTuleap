@@ -3,7 +3,7 @@
 namespace XTuleap
 {
     /// <summary>
-    /// This class represents an artifact link.
+    ///     This class represents an artifact link.
     /// </summary>
     public class ArtifactLink : IComparable
     {
@@ -24,12 +24,18 @@ namespace XTuleap
             set { this.mId = value; }
         }
 
+        /// <summary>
+        ///     Gets or sets reference of the link.
+        /// </summary>
         public string Reference
         {
             get;
             set;
         }
 
+        /// <summary>
+        ///     Gets or sets url of the link.
+        /// </summary>
         public string Url
         {
             get;
@@ -37,16 +43,7 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// ToString.
-        /// </summary>
-        /// <returns>The string representation.</returns>
-        public override string ToString()
-        {
-            return this.Id.ToString();
-        }
-
-        /// <summary>
-        /// Compare to.
+        ///     Compare to.
         /// </summary>
         /// <param name="pSecond">The second member.</param>
         /// <returns></returns>
@@ -64,6 +61,15 @@ namespace XTuleap
             }
 
             throw new ArgumentException("Object is not an ArtifactLink");
+        }
+
+        /// <summary>
+        ///     ToString.
+        /// </summary>
+        /// <returns>The string representation.</returns>
+        public override string ToString()
+        {
+            return this.Id.ToString();
         }
     }
 }

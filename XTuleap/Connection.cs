@@ -3,44 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Newtonsoft.Json;
 
 namespace XTuleap
 {
     /// <summary>
-    /// This class is used to stores the connection on TULEAP.
+    ///     This class is used to stores the connection on Tuleap.
     /// </summary>
     public class Connection
     {
         /// <summary>
-        /// Gets the url.
-        /// </summary>
-        public string Url
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the SSH key.
-        /// </summary>
-        public string SSHKey
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Timeout for the connection.
-        /// </summary>
-        public int Timeout
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Default constructor.
+        ///     Default constructor.
         /// </summary>
         public Connection(string pUrl, string pSshKey)
         {
@@ -52,7 +28,40 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Adds a new tracker structure.
+        ///     Gets the url.
+        /// </summary>
+        public string Url
+        {
+            get;
+        }
+
+        /// <summary>
+        ///     Gets the SSH key.
+        /// </summary>
+        public string SSHKey
+        {
+            get;
+        }
+
+        /// <summary>
+        ///     Timeout for the connection.
+        /// </summary>
+        public int Timeout
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        ///     Gets all structures.
+        /// </summary>
+        public List<TrackerStructure> TrackerStructures
+        {
+            get;
+        }
+
+        /// <summary>
+        ///     Adds a new tracker structure.
         /// </summary>
         /// <param name="pId">The identifier of the structure.</param>
         /// <returns>True if tracker structure has been retrieve, false otherwise.</returns>
@@ -68,6 +77,7 @@ namespace XTuleap
                     this.TrackerStructures.Add(lStructure);
                     return lStructure;
                 }
+
                 return null;
             }
 
@@ -75,7 +85,7 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Send a GET request on TULEAP.
+        ///     Send a GET request on Tuleap.
         /// </summary>
         /// <param name="pRelative">The relative URI according to the URI of the connection.</param>
         /// <param name="pData">The data (optional)</param>
@@ -107,36 +117,33 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Send a PUT request on TULEAP.
+        ///     Send a PUT request on Tuleap.
         /// </summary>
         /// <param name="pRelative">The relative URI according to the URI of the connection.</param>
         /// <param name="pData">The data (optional)</param>
         /// <param name="pTimeout">The timeout in milliseconds</param>
-
         public string PutRequest(string pRelative, string pData, int pTimeout = 60000)
         {
             try
             {
                 string lUrl = this.Url + pRelative;
-                HttpWebRequest lRequest = (HttpWebRequest)WebRequest.Create(lUrl);
+                HttpWebRequest lRequest = (HttpWebRequest) WebRequest.Create(lUrl);
                 lRequest.ContentType = "application/json; charset=UTF-8";
                 lRequest.Headers.Add("X-Auth-AccessKey", this.SSHKey);
-                Byte[] lData = Encoding.UTF8.GetBytes(pData);
+                byte[] lData = Encoding.UTF8.GetBytes(pData);
                 lRequest.ContentLength = lData.Length;
                 lRequest.Method = "PUT";
                 lRequest.Timeout = pTimeout;
                 Stream lRequestStream = lRequest.GetRequestStream();
                 lRequestStream.Write(lData, 0, lData.Length);
                 lRequestStream.Close();
-               
+
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
                 Stream lReceiveStream = lWebResponse.GetResponseStream();
                 StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
                 string lContent = lReader.ReadToEnd();
                 lWebResponse.Close();
                 return lContent;
-
-
             }
             catch (Exception lException)
             {
@@ -147,43 +154,40 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Send a PUT request on TULEAP.
+        ///     Send a PUT request on Tuleap.
         /// </summary>
         /// <param name="pRelative">The relative URI according to the URI of the connection.</param>
         /// <param name="pData">The data (optional)</param>
         /// <param name="pTimeout">The timeout in milliseconds</param>
-
         public string PostRequest(string pRelative, string pData, int pTimeout = 60000)
         {
             try
             {
                 string lUrl = this.Url + pRelative;
-                HttpWebRequest lRequest = (HttpWebRequest)WebRequest.Create(lUrl);
+                HttpWebRequest lRequest = (HttpWebRequest) WebRequest.Create(lUrl);
                 lRequest.Accept = "application/json";
                 lRequest.ContentType = "application/json; charset=UTF-8";
                 lRequest.Headers.Add("X-Auth-AccessKey", this.SSHKey);
-                Byte[] lData = Encoding.UTF8.GetBytes(pData);
+                byte[] lData = Encoding.UTF8.GetBytes(pData);
                 lRequest.ContentLength = lData.Length;
                 lRequest.Method = "POST";
                 lRequest.Timeout = pTimeout;
                 Stream lRequestStream = lRequest.GetRequestStream();
                 lRequestStream.Write(lData, 0, lData.Length);
                 lRequestStream.Close();
-               
+
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
                 Stream lReceiveStream = lWebResponse.GetResponseStream();
                 StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
                 string lContent = lReader.ReadToEnd();
                 lWebResponse.Close();
                 return lContent;
-
-
             }
             catch (WebException lException)
             {
                 if (lException.Response != null)
                 {
-                    using (HttpWebResponse errorResponse = (HttpWebResponse)lException.Response)
+                    using (HttpWebResponse errorResponse = (HttpWebResponse) lException.Response)
                     {
                         using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
                         {
@@ -192,14 +196,15 @@ namespace XTuleap
                         }
                     }
                 }
+
                 Console.WriteLine(lException);
             }
-            return null;
 
+            return null;
         }
 
         /// <summary>
-        /// Send a PUT request on TULEAP.
+        ///     Send a PUT request on Tuleap.
         /// </summary>
         /// <param name="pRelative">The relative URI according to the URI of the connection.</param>
         /// <param name="pData">The data (optional)</param>
@@ -209,17 +214,17 @@ namespace XTuleap
             try
             {
                 string lUrl = this.Url + pRelative;
-                HttpWebRequest lRequest = (HttpWebRequest)WebRequest.Create(lUrl);
+                HttpWebRequest lRequest = (HttpWebRequest) WebRequest.Create(lUrl);
                 lRequest.ContentType = "application/json; charset=UTF-8";
                 lRequest.Headers.Add("X-Auth-AccessKey", this.SSHKey);
-                Byte[] lData = Encoding.UTF8.GetBytes(pData);
+                byte[] lData = Encoding.UTF8.GetBytes(pData);
                 lRequest.ContentLength = lData.Length;
                 lRequest.Method = "DELETE";
                 lRequest.Timeout = pTimeout;
                 Stream lRequestStream = lRequest.GetRequestStream();
                 lRequestStream.Write(lData, 0, lData.Length);
                 lRequestStream.Close();
-               
+
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
                 Stream lReceiveStream = lWebResponse.GetResponseStream();
                 StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
@@ -237,17 +242,10 @@ namespace XTuleap
         }
 
         /// <summary>
-        /// Gets all structures.
+        ///     This method is defined to force all certifications.
         /// </summary>
-        public List<TrackerStructure> TrackerStructures
-        {
-            get;
-        }
-
-        /// <summary>
-        /// This method is defined to force all certifications.
-        /// </summary>
-        private bool AcceptAllCertifications(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certification, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+        private bool AcceptAllCertifications(object sender, X509Certificate certification, X509Chain chain,
+            SslPolicyErrors sslPolicyErrors)
         {
             return true;
         }
