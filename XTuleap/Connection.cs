@@ -7,6 +7,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Newtonsoft.Json;
+using NLog;
 
 namespace XTuleap
 {
@@ -15,6 +16,11 @@ namespace XTuleap
     /// </summary>
     public class Connection
     {
+        /// <summary>
+        /// Logger of the class.
+        /// </summary>
+        private static readonly Logger msLogger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         ///     Default constructor.
         /// </summary>
@@ -108,9 +114,22 @@ namespace XTuleap
                 lWebResponse.Close();
                 return lContent;
             }
+            catch (WebException lException)
+            {
+                if (lException.Response != null)
+                {
+                    using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
+                    using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
+                    string lError = lReader.ReadToEnd();
+                    msLogger.Log(LogLevel.Trace, lError);
+                    //TODO: use JSON.net to parse this string and look at the error message
+                }
+
+                msLogger.Log(LogLevel.Trace, lException);
+            }
             catch (Exception lException)
             {
-                Console.WriteLine(lException);
+                msLogger.Log(LogLevel.Trace, lException);
             }
 
             return null;
@@ -122,7 +141,7 @@ namespace XTuleap
         /// <param name="pRelative">The relative URI according to the URI of the connection.</param>
         /// <param name="pData">The data (optional)</param>
         /// <param name="pTimeout">The timeout in milliseconds</param>
-        public string PutRequest(string pRelative, string pData, int pTimeout = 60000)
+        public string? PutRequest(string pRelative, string pData, int pTimeout = 60000)
         {
             try
             {
@@ -145,9 +164,22 @@ namespace XTuleap
                 lWebResponse.Close();
                 return lContent;
             }
+            catch (WebException lException)
+            {
+                if (lException.Response != null)
+                {
+                    using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
+                    using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
+                    string lError = lReader.ReadToEnd();
+                    msLogger.Log(LogLevel.Trace, lError);
+                    //TODO: use JSON.net to parse this string and look at the error message
+                }
+
+                msLogger.Log(LogLevel.Trace, lException);
+            }
             catch (Exception lException)
             {
-                Console.WriteLine(lException);
+                msLogger.Log(LogLevel.Trace, lException);
             }
 
             return null;
@@ -159,7 +191,7 @@ namespace XTuleap
         /// <param name="pRelative">The relative URI according to the URI of the connection.</param>
         /// <param name="pData">The data (optional)</param>
         /// <param name="pTimeout">The timeout in milliseconds</param>
-        public string PostRequest(string pRelative, string pData, int pTimeout = 60000)
+        public string? PostRequest(string pRelative, string pData, int pTimeout = 60000)
         {
             try
             {
@@ -190,11 +222,11 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse) lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    Console.WriteLine(lError);
+                    msLogger.Log(LogLevel.Trace, lError);
                     //TODO: use JSON.net to parse this string and look at the error message
                 }
 
-                Console.WriteLine(lException);
+                msLogger.Log(LogLevel.Trace, lException);
             }
 
             return null;
@@ -230,9 +262,22 @@ namespace XTuleap
 
                 return true;
             }
+            catch (WebException lException)
+            {
+                if (lException.Response != null)
+                {
+                    using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
+                    using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
+                    string lError = lReader.ReadToEnd();
+                    msLogger.Log(LogLevel.Trace, lError);
+                    //TODO: use JSON.net to parse this string and look at the error message
+                }
+
+                msLogger.Log(LogLevel.Trace, lException);
+            }
             catch (Exception lException)
             {
-                Console.WriteLine(lException);
+                msLogger.Log(LogLevel.Trace, lException);
             }
 
             return false;
