@@ -1,74 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace XTuleap
 {
-    public interface ITracker
-    {
-        /// <summary>
-        ///     Gets or sets the name of the tracker.
-        /// </summary>
-        string Name
-        {
-            get;
-        }
-
-        /// <summary>
-        ///     Gets the structure of the tracker.
-        /// </summary>
-        TrackerStructure Structure
-        {
-            get;
-        }
-
-        /// <summary>
-        ///     Gets or sets the item name.
-        /// </summary>
-        string ItemName
-        {
-            get;
-        }
-
-        /// <summary>
-        ///     Gets or sets the description.
-        /// </summary>
-        string Description
-        {
-            get;
-        }
-
-        /// <summary>
-        ///     Gets the artifacts.
-        /// </summary>
-        List<int> ArtifactIds
-        {
-            get;
-        }
-
-        /// <summary>
-        ///     Gets the list of base artifacts (untyped).
-        /// </summary>
-        IEnumerable<Artifact> BaseArtifacts
-        {
-            get;
-        }
-
-        /// <summary>
-        ///     Requests all artifacts of the tracker.
-        /// </summary>
-        /// <param name="pConnection">The connection</param>
-        void PreviewRequest(Connection pConnection);
-
-        /// <summary>
-        ///     Requests all artifacts of the tracker.
-        /// </summary>
-        /// <param name="pConnection">The connection</param>
-        void Request(Connection pConnection);
-    }
-
     /// <summary>
     ///     This class represents a tracker in Tuleap.
     /// </summary>
@@ -81,14 +19,14 @@ namespace XTuleap
         public Tracker(TrackerStructure pStructure)
         {
             this.Structure = pStructure;
-            this.Artifacts = new List<TArtifactType>();
+            this.Artifacts = new ObservableCollection<TArtifactType>();
             this.Name = "Tracker " + this.Structure.Id;
         }
 
         /// <summary>
         ///     Gets the artifacts.
         /// </summary>
-        public List<TArtifactType> Artifacts
+        public ObservableCollection<TArtifactType> Artifacts
         {
             get;
         }
@@ -139,7 +77,7 @@ namespace XTuleap
         /// <summary>
         ///     Gets the artifacts.
         /// </summary>
-        public List<int> ArtifactIds
+        public ObservableCollection<int> ArtifactIds
         {
             get;
             private set;
@@ -168,7 +106,7 @@ namespace XTuleap
             if (string.IsNullOrEmpty(lIds) == false)
             {
                 List<TArtifactType> lResult = JsonConvert.DeserializeObject<List<TArtifactType>>(lIds);
-                this.ArtifactIds = lResult.Select(pItem => pItem.Id).ToList();
+                this.ArtifactIds = new ObservableCollection<int>(lResult.Select(pItem => pItem.Id));
             }
         }
 

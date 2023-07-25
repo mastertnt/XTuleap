@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Xunit;
 
@@ -8,7 +9,6 @@ namespace XTuleap.Tests
     public class TuleapTests
     {
         private readonly string mKey = "tlp-k1-74.0938e677298d61a90d7a50246dfbce060eaa752b7298de23f5b233569aca766a";
-
         private readonly int mSimpleTrackerId = 867;
         private readonly string mUri = "https://Tuleap.net/api/";
 
@@ -95,7 +95,7 @@ namespace XTuleap.Tests
                 lTargetTracker.ArtifactIds.Last());
         }
 
-        private static int RandomId(List<int> pArtifactIds)
+        private static int RandomId(ObservableCollection<int> pArtifactIds)
         {
             Random lRandom = new Random();
             return pArtifactIds.ElementAt(lRandom.Next(0, pArtifactIds.Count));
