@@ -22,6 +22,10 @@ namespace XTuleap
         ArtifactLinks,
         Cross,
         Radio,
+        CreatedOn,
+        UpdatedOn,
+        CreatedBy,
+        UpdatedBy,
         Unknown
     }
 
@@ -46,6 +50,10 @@ namespace XTuleap
             msTypes.Add("date", TrackerFieldType.DateTime);
             msTypes.Add("cross", TrackerFieldType.Cross);
             msTypes.Add("art_link", TrackerFieldType.ArtifactLinks);
+            msTypes.Add("subon", TrackerFieldType.CreatedOn);
+            msTypes.Add("subby", TrackerFieldType.CreatedBy);
+            msTypes.Add("lud", TrackerFieldType.UpdatedOn);
+            msTypes.Add("luby", TrackerFieldType.UpdatedBy);
         }
 
         /// <summary>

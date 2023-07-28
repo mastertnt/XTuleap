@@ -19,6 +19,21 @@ namespace XTuleap.Tests
         private readonly string mUri = "https://Tuleap.net/api/";
 
         [Fact]
+        public void Request()
+        {
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            lTargetTracker.PreviewRequest(lConnection);
+
+            Artifact lNewArtifact = new Artifact()
+            {
+                Id = 32759
+            };
+            lNewArtifact.Request(lConnection);
+        }
+
+        [Fact]
         public void CreateSimpleArtifact()
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);
