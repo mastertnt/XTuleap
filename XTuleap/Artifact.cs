@@ -397,7 +397,7 @@ namespace XTuleap
                                 {
                                     try
                                     {
-                                        this.StoreValue(lTrackerField.Name, lToken.Value<float>("value"));
+                                        this.StoreValue(lTrackerField.Name, lToken.Value<int>("value"));
                                     }
                                     catch
                                     {
