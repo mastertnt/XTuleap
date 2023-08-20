@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
+using NLog;
 
 namespace XTuleap
 {
@@ -34,9 +35,8 @@ namespace XTuleap
     /// </summary>
     public class TrackerField
     {
-        private static readonly Dictionary<string?, TrackerFieldType> msTypes =
-            new Dictionary<string?, TrackerFieldType>();
-
+        private static readonly Dictionary<string?, TrackerFieldType> msTypes = new Dictionary<string?, TrackerFieldType>();
+        
         static TrackerField()
         {
             msTypes.Add("int", TrackerFieldType.Int);
@@ -183,7 +183,10 @@ namespace XTuleap
                     List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
 
                     List<string> lLinkStr = new List<string>();
-                    foreach (ArtifactLink lValue in lValues) lLinkStr.Add("{\"id\" :" + lValue + '}');
+                    foreach (ArtifactLink lValue in lValues)
+                    {
+                        lLinkStr.Add("{\"id\" :" + lValue + '}');
+                    }
 
                     return "  {  \"field_id\": " + this.Id + ", \"links\": [" + string.Join(",", lLinkStr) + "]  }";
                 }
@@ -193,7 +196,10 @@ namespace XTuleap
                     List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
 
                     List<string> lLinkStr = new List<string>();
-                    foreach (ArtifactLink lValue in lValues) lLinkStr.Add("{\"ref\" :" + lValue + '}');
+                    foreach (ArtifactLink lValue in lValues)
+                    {
+                        lLinkStr.Add("{\"ref\" :" + lValue + '}');
+                    }
 
                     return "  {  \"field_id\": " + this.Id + ", \"value\": [" + string.Join(",", lLinkStr) + "]  }";
                 }

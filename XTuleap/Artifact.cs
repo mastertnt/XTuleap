@@ -9,6 +9,7 @@ using System.Text;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace XTuleap
 {
@@ -21,6 +22,11 @@ namespace XTuleap
         ///     A constant for INVALID_ARTIFACT.
         /// </summary>
         public static readonly Artifact INVALID_ARTIFACT = new Artifact { Id = -1 };
+
+        /// <summary>
+        /// Logger of the class.
+        /// </summary>
+        private static readonly Logger msLogger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// This constant stores the data time format.
@@ -152,12 +158,20 @@ namespace XTuleap
                     lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == pFieldName.ToLower());
                 if (lTrackerField != null)
                 {
-                    string lUpdateData = "{" +
-                                         "  \"values\": [" +
-                                         lTrackerField.EncodeValueField(pValue) +
-                                         "  ]}";
+                    try
+                    {
+                        string lUpdateData = "{" +
+                                             "  \"values\": [" +
+                                             lTrackerField.EncodeValueField(pValue) +
+                                             "  ]}";
 
-                    pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
+                        pConnection.PutRequest("artifacts/" + this.Id, lUpdateData);
+                    }
+                    catch
+                    {
+                        msLogger.Error("An error occured during update of " + lTrackerField.Name);
+                    }
+                    
                 }
 
                 return true;
@@ -257,31 +271,36 @@ namespace XTuleap
                             switch (lTrackerField.FieldType)
                             {
                                 case TrackerFieldType.Aid:
-                                {
-                                    // Already managed.
-                                }
+                                    {
+                                        // Already managed.
+                                    }
                                     break;
 
                                 case TrackerFieldType.SingleChoice:
-                                {
-                                    if (lToken["values"] != null && lToken["values"].Count() != 0)
                                     {
-                                        if (lToken["values"].First()["id"] != null)
+                                        if (lToken["values"] != null && lToken["values"].Count() != 0)
                                         {
-                                            try
+                                            if (lToken["values"].First()["id"] != null)
                                             {
-                                                int lValueId = (int)lToken["values"].First()["id"];
-                                                EnumEntry lValue = lTrackerField.EnumValues.FirstOrDefault(pValue => pValue.Id == lValueId);
-                                                if (lValue != null)
+                                                try
                                                 {
-                                                    this.StoreValue(lTrackerField.Name, lValue.Label);
+                                                    int lValueId = (int)lToken["values"].First()["id"];
+                                                    EnumEntry lValue = lTrackerField.EnumValues.FirstOrDefault(pValue => pValue.Id == lValueId);
+                                                    if (lValue != null)
+                                                    {
+                                                        this.StoreValue(lTrackerField.Name, lValue.Label);
+                                                    }
+                                                    else
+                                                    {
+                                                        this.StoreValue(lTrackerField.Name, "null");
+                                                    }
                                                 }
-                                                else
+                                                catch
                                                 {
                                                     this.StoreValue(lTrackerField.Name, "null");
                                                 }
                                             }
-                                            catch
+                                            else
                                             {
                                                 this.StoreValue(lTrackerField.Name, "null");
                                             }
@@ -291,95 +310,199 @@ namespace XTuleap
                                             this.StoreValue(lTrackerField.Name, "null");
                                         }
                                     }
-                                    else
-                                    {
-                                        this.StoreValue(lTrackerField.Name, "null");
-                                    }
-                                }
                                     break;
 
                                 case TrackerFieldType.MultipleChoice:
 
-                                {
-                                    if (lToken["values"] != null && lToken["values"].Count() != 0)
                                     {
-                                        List<string?> lValues = new List<string?>();
-                                        foreach (JToken lValueItem in lToken["values"])
+                                        if (lToken["values"] != null && lToken["values"].Count() != 0)
                                         {
-                                            if (lValueItem["id"] != null)
+                                            List<string?> lValues = new List<string?>();
+                                            foreach (JToken lValueItem in lToken["values"])
                                             {
-                                                try
+                                                if (lValueItem["id"] != null)
                                                 {
-                                                    int lValueId = (int)lValueItem["id"];
-                                                    EnumEntry lValueEnum = lTrackerField.EnumValues.FirstOrDefault(pValue => pValue.Id == lValueId);
-
-                                                    if (lValueEnum != null)
+                                                    try
                                                     {
-                                                        lValues.Add(lValueEnum.Label);
+                                                        int lValueId = (int)lValueItem["id"];
+                                                        EnumEntry lValueEnum = lTrackerField.EnumValues.FirstOrDefault(pValue => pValue.Id == lValueId);
+
+                                                        if (lValueEnum != null)
+                                                        {
+                                                            lValues.Add(lValueEnum.Label);
+                                                        }
+                                                        else
+                                                        {
+                                                            lValues.Add("null");
+                                                        }
                                                     }
-                                                    else
+                                                    catch
                                                     {
                                                         lValues.Add("null");
                                                     }
                                                 }
-                                                catch
+                                                else
                                                 {
                                                     lValues.Add("null");
                                                 }
                                             }
-                                            else
-                                            {
-                                                lValues.Add("null");
-                                            }
-                                        }
 
-                                        this.StoreValue(lTrackerField.Name, lValues);
+                                            this.StoreValue(lTrackerField.Name, lValues);
+                                        }
+                                        else
+                                        {
+                                            this.StoreValue(lTrackerField.Name, "null");
+                                        }
                                     }
-                                    else
-                                    {
-                                        this.StoreValue(lTrackerField.Name, "null");
-                                    }
-                                }
                                     break;
 
                                 case TrackerFieldType.String:
-                                {
-                                    try
                                     {
-                                        this.StoreValue(lTrackerField.Name, lToken.Value<string>("value"));
+                                        try
+                                        {
+                                            this.StoreValue(lTrackerField.Name, lToken.Value<string>("value"));
+                                        }
+                                        catch
+                                        {
+                                            msLogger.Error("Error while parsing 'String' field.");
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
                                     }
-                                    catch
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
                                     break;
 
                                 case TrackerFieldType.Text:
-                                {
-                                    try
                                     {
-                                        var lDocument = new HtmlDocument();
-                                        lDocument.LoadHtml(lToken.Value<string>("value"));
-                                        this.StoreValue(lTrackerField.Name, lDocument.DocumentNode.InnerText.Trim());
-                                    }
+                                        try
+                                        {
+                                            var lDocument = new HtmlDocument();
+                                            lDocument.LoadHtml(lToken.Value<string>("value"));
+                                            this.StoreValue(lTrackerField.Name, lDocument.DocumentNode.InnerText.Trim());
+                                        }
 
-                                    catch
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
+                                        catch
+                                        {
+                                            msLogger.Error("Error while parsing 'Text' field.");
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
                                     }
-                                }
                                     break;
 
                                 case TrackerFieldType.DateTime:
-                                {
-                                    try
+                                    {
+                                        try
+                                        {
+                                            string lDateFormat = DATE_TIME_FORMAT;
+                                            string lValue = lToken.Value<string>("value");
+                                            if (lValue != null)
+                                            {
+                                                DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat, CultureInfo.InvariantCulture);
+                                                this.StoreValue(lTrackerField.Name, lDateTime);
+                                            }
+                                            else
+                                            {
+                                                msLogger.Error("Error while parsing 'DateTime' field.");
+                                                this.StoreValue(lTrackerField.Name, null);
+                                            }
+                                        }
+
+                                        catch
+
+                                        {
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
+                                    }
+                                    break;
+
+                                case TrackerFieldType.Int:
+                                    {
+                                        try
+                                        {
+                                            this.StoreValue(lTrackerField.Name, lToken.Value<int>("value"));
+                                        }
+                                        catch
+                                        {
+                                            msLogger.Error("Error while parsing 'Int' field.");
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
+                                    }
+                                    break;
+
+                                case TrackerFieldType.Float:
+                                    {
+                                        try
+                                        {
+                                            this.StoreValue(lTrackerField.Name, lToken.Value<float>("value"));
+                                        }
+                                        catch
+                                        {
+                                            msLogger.Error("Error while parsing 'Float' field.");
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
+                                    }
+                                    break;
+
+                                case TrackerFieldType.ArtifactLinks:
+                                    {
+                                        List<ArtifactLink>? lLinks = new List<ArtifactLink>();
+                                        foreach (JToken lSubToken in lToken["links"])
+                                        {
+                                            ArtifactLink lLink = new ArtifactLink
+                                            {
+                                                Id = (int)lSubToken["id"]
+                                            };
+                                            lLinks.Add(lLink);
+                                        }
+
+                                        this.StoreValue(lTrackerField.Name, lLinks);
+                                    }
+                                    break;
+
+                                case TrackerFieldType.Cross:
+
+                                    {
+                                        List<ArtifactLink>? lLinks = new List<ArtifactLink>();
+                                        foreach (JToken lSubToken in lToken["value"])
+                                        {
+                                            ArtifactLink lLink = new ArtifactLink
+                                            {
+                                                Reference = lSubToken["ref"].ToString(),
+                                                Url = lSubToken["url"].ToString()
+                                            };
+                                            lLinks.Add(lLink);
+                                        }
+
+                                        this.StoreValue(lTrackerField.Name, lLinks);
+                                    }
+                                    break;
+
+                                case TrackerFieldType.CreatedOn:
                                     {
                                         string lDateFormat = DATE_TIME_FORMAT;
                                         string lValue = lToken.Value<string>("value");
                                         if (lValue != null)
                                         {
-                                            DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat, CultureInfo.InvariantCulture);
+                                            DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat,
+                                                CultureInfo.InvariantCulture);
+                                            this.StoreValue(lTrackerField.Name, lDateTime);
+                                        }
+                                        else
+                                        {
+                                            msLogger.Error("Error while parsing 'CreatedOn' field.");
+                                            this.StoreValue(lTrackerField.Name, null);
+                                        }
+                                    }
+
+                                    break;
+
+                                case TrackerFieldType.UpdatedOn:
+                                    {
+                                        string lDateFormat = DATE_TIME_FORMAT;
+                                        string lValue = lToken.Value<string>("value");
+
+                                        if (lValue != null)
+                                        {
+                                            DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat,
+                                                CultureInfo.InvariantCulture);
                                             this.StoreValue(lTrackerField.Name, lDateTime);
                                         }
                                         else
@@ -387,130 +510,27 @@ namespace XTuleap
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
                                     }
-
-                                    catch
-
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
-                                    break;
-
-                                case TrackerFieldType.Int:
-                                {
-                                    try
-                                    {
-                                        this.StoreValue(lTrackerField.Name, lToken.Value<int>("value"));
-                                    }
-                                    catch
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
-                                    break;
-
-                                case TrackerFieldType.Float:
-                                {
-                                    try
-                                    {
-                                        this.StoreValue(lTrackerField.Name, lToken.Value<float>("value"));
-                                    }
-                                    catch
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
-                                    break;
-
-                                case TrackerFieldType.ArtifactLinks:
-                                {
-                                    List<ArtifactLink>? lLinks = new List<ArtifactLink>();
-                                    foreach (JToken lSubToken in lToken["links"])
-                                    {
-                                        ArtifactLink lLink = new ArtifactLink
-                                        {
-                                            Id = (int)lSubToken["id"]
-                                        };
-                                        lLinks.Add(lLink);
-                                    }
-
-                                    this.StoreValue(lTrackerField.Name, lLinks);
-                                }
-                                    break;
-
-                                case TrackerFieldType.Cross:
-
-                                {
-                                    List<ArtifactLink>? lLinks = new List<ArtifactLink>();
-                                    foreach (JToken lSubToken in lToken["value"])
-                                    {
-                                        ArtifactLink lLink = new ArtifactLink
-                                        {
-                                            Reference = lSubToken["ref"].ToString(),
-                                            Url = lSubToken["url"].ToString()
-                                        };
-                                        lLinks.Add(lLink);
-                                    }
-
-                                    this.StoreValue(lTrackerField.Name, lLinks);
-                                }
-                                    break;
-
-                                case TrackerFieldType.CreatedOn:
-                                {
-                                    string lDateFormat = DATE_TIME_FORMAT;
-                                    string lValue = lToken.Value<string>("value");
-                                    if (lValue != null)
-                                    {
-                                        DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat,
-                                            CultureInfo.InvariantCulture);
-                                        this.StoreValue(lTrackerField.Name, lDateTime);
-                                    }
-                                    else
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
-
-                                    break;
-
-                                case TrackerFieldType.UpdatedOn:
-                                {
-                                    string lDateFormat = DATE_TIME_FORMAT;
-                                    string lValue = lToken.Value<string>("value");
-
-                                    if (lValue != null)
-                                    {
-                                        DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat,
-                                            CultureInfo.InvariantCulture);
-                                        this.StoreValue(lTrackerField.Name, lDateTime);
-                                    }
-                                    else
-                                    {
-                                        this.StoreValue(lTrackerField.Name, null);
-                                    }
-                                }
                                     break;
 
                                 case TrackerFieldType.CreatedBy:
 
-                                {
-                                    this.StoreValue(lTrackerField.Name, lToken["value"].Value<string>("username"));
-                                }
+                                    {
+                                        this.StoreValue(lTrackerField.Name, lToken["value"].Value<string>("username"));
+                                    }
                                     break;
 
                                 case TrackerFieldType.UpdatedBy:
 
-                                {
-                                    this.StoreValue(lTrackerField.Name, lToken["value"].Value<string>("username"));
-                                }
+                                    {
+                                        this.StoreValue(lTrackerField.Name, lToken["value"].Value<string>("username"));
+                                    }
                                     break;
 
                                 case TrackerFieldType.Unknown:
 
-                                {
-                                    //Console.WriteLine("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
-                                }
+                                    {
+                                        //Console.WriteLine("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
+                                    }
 
                                     break;
                             }
