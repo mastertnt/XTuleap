@@ -9,7 +9,7 @@ internal class Program
         TuleapTests lTest = new();
         lTest.Request();
         lTest.CreateSimpleArtifact();
-        lTest.UpdateString();
+        lTest.UpdateText();
         lTest.UpdateReferences();
         lTest.CreateArtifactWithEnum();
     }

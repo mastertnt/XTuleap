@@ -117,6 +117,31 @@ namespace XTuleap.Tests
         }
 
         [Fact]
+        public void UpdateText()
+        {
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            lTargetTracker.PreviewRequest(lConnection);
+
+            Artifact lArtifactToUpdate = new Artifact(this.mSimpleTrackerId) { Id = lTargetTracker.ArtifactIds.First() };
+            lArtifactToUpdate.Update(lConnection, "text", "updated_string_value");
+
+
+            Connection lConnection1 = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure1 = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker1 = new Tracker<Artifact>(lTargetStructure1);
+            lTargetTracker1.PreviewRequest(lConnection1);
+            Assert.Equal(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count);
+
+            Artifact lResult = new Artifact(this.mSimpleTrackerId) { Id = lArtifactToUpdate.Id };
+            lResult.Request(lConnection1, lTargetTracker1);
+
+            Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
+            Assert.Equal(lResult.GetFieldValue<string>("text"), "updated_string_value");
+        }
+
+        [Fact]
         public void UpdateReference()
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);

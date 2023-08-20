@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -358,7 +359,9 @@ namespace XTuleap
                                 {
                                     try
                                     {
-                                        this.StoreValue(lTrackerField.Name, lToken.Value<string>("value"));
+                                        var lDocument = new HtmlDocument();
+                                        lDocument.LoadHtml(lToken.Value<string>("value"));
+                                        this.StoreValue(lTrackerField.Name, lDocument.DocumentNode.InnerText.Trim());
                                     }
 
                                     catch
