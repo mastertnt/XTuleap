@@ -118,12 +118,13 @@ namespace XTuleap
                 throw;
             }
 
-
+            string lIds;
             try
             {
-                string lIds = pConnection.GetRequest("trackers/" + this.Structure.Id + "/artifacts?limit=1000", "");
+                lIds = pConnection.GetRequest("trackers/" + this.Structure.Id + "/artifacts?limit=1000", "");
                 if (string.IsNullOrEmpty(lIds) == false)
                 {
+                    msLogger.Info("Content to deserialize : " + lIds);
                     List<TArtifactType> lResult = JsonConvert.DeserializeObject<List<TArtifactType>>(lIds);
                     this.ArtifactIds = new ObservableCollection<int>(lResult.Select(pItem => pItem.Id));
                 }

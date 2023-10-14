@@ -7,18 +7,18 @@
     <PackageProjectUrl>https://github.com/mastertnt/XTuleap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mastertnt/XTuleap</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.8.4.0</AssemblyVersion>
-    <FileVersion>1.8.5.0</FileVersion>
-    <Version>1.8.5</Version>
+    <AssemblyVersion>1.8.6.0</AssemblyVersion>
+    <FileVersion>1.8.6.0</FileVersion>
+    <Version>1.8.6</Version>
     <PackageReleaseNotes>1.8.1 : Improve Text retrieval
 1.8.1 : Change DateTime format</PackageReleaseNotes>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.51" />
-    <PackageReference Include="NLog" Version="5.2.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.54" />
+    <PackageReference Include="NLog" Version="5.2.4" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.6.0-preview3.19128.7" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
