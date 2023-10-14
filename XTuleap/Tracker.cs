@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace XTuleap
 {
@@ -13,6 +14,11 @@ namespace XTuleap
     /// </summary>
     public class Tracker<TArtifactType> : INotifyPropertyChanged, ITracker where TArtifactType : Artifact, new()
     {
+        /// <summary>
+        /// Logger of the class.
+        /// </summary>
+        private static readonly Logger msLogger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         ///     Default constructor.
         /// </summary>
@@ -91,24 +97,43 @@ namespace XTuleap
         public void PreviewRequest(Connection pConnection)
         {
             this.Artifacts.Clear();
-            string lTrackerInfo = pConnection.GetRequest("trackers/" + this.Structure.Id, "");
-            if (string.IsNullOrEmpty(lTrackerInfo) == false)
+
+            try
             {
-                JObject lTrackerObject = JsonConvert.DeserializeObject(lTrackerInfo) as JObject;
-                if (lTrackerObject != null)
+                string lTrackerInfo = pConnection.GetRequest("trackers/" + this.Structure.Id, "");
+                if (string.IsNullOrEmpty(lTrackerInfo) == false)
                 {
-                    this.Name = lTrackerObject.Value<string>("label");
-                    this.Description = lTrackerObject.Value<string>("description");
-                    this.ItemName = lTrackerObject.Value<string>("item_name");
+                    JObject lTrackerObject = JsonConvert.DeserializeObject(lTrackerInfo) as JObject;
+                    if (lTrackerObject != null)
+                    {
+                        this.Name = lTrackerObject.Value<string>("label");
+                        this.Description = lTrackerObject.Value<string>("description");
+                        this.ItemName = lTrackerObject.Value<string>("item_name");
+                    }
                 }
             }
-
-            string lIds = pConnection.GetRequest("trackers/" + this.Structure.Id + "/artifacts?limit=1000", "");
-            if (string.IsNullOrEmpty(lIds) == false)
+            catch (Exception e)
             {
-                List<TArtifactType> lResult = JsonConvert.DeserializeObject<List<TArtifactType>>(lIds);
-                this.ArtifactIds = new ObservableCollection<int>(lResult.Select(pItem => pItem.Id));
+                msLogger.Error("Error while retrieving tracker info", e);
+                throw;
             }
+
+
+            try
+            {
+                string lIds = pConnection.GetRequest("trackers/" + this.Structure.Id + "/artifacts?limit=1000", "");
+                if (string.IsNullOrEmpty(lIds) == false)
+                {
+                    List<TArtifactType> lResult = JsonConvert.DeserializeObject<List<TArtifactType>>(lIds);
+                    this.ArtifactIds = new ObservableCollection<int>(lResult.Select(pItem => pItem.Id));
+                }
+            }
+            catch (Exception e)
+            {
+                msLogger.Error("Error while retrieving tracker artifacts", e);
+                throw;
+            }
+           
         }
 
         /// <summary>
