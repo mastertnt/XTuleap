@@ -184,9 +184,9 @@ namespace XTuleap
         ///     Deletes the artifact.
         /// </summary>
         /// <param name="pConnection">The connection.</param>
-        public void Delete(Connection pConnection)
+        public bool Delete(Connection pConnection)
         {
-            pConnection.DeleteRequest("artifacts/" + this.Id, "");
+            return pConnection.DeleteRequest("artifacts/" + this.Id, "");
         }
 
 
