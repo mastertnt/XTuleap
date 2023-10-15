@@ -7,9 +7,9 @@
     <PackageProjectUrl>https://github.com/mastertnt/XTuleap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mastertnt/XTuleap</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.8.6.0</AssemblyVersion>
+    <AssemblyVersion>1.8.7.0</AssemblyVersion>
     <FileVersion>1.8.6.0</FileVersion>
-    <Version>1.8.6</Version>
+    <Version>1.8.7</Version>
     <PackageReleaseNotes>1.8.1 : Improve Text retrieval
 1.8.1 : Change DateTime format</PackageReleaseNotes>
     <Nullable>enable</Nullable>

@@ -67,6 +67,24 @@ namespace XTuleap.Tests
         }
 
         [Fact]
+        public void DeleteArtifact()
+        {
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            lTargetTracker.PreviewRequest(lConnection);
+
+            Artifact lNewArtifact = new Artifact(this.mSimpleTrackerId);
+            Dictionary<string, object> lValues = new Dictionary<string, object>
+            {
+                {"string", "string_value"}, {"int", 77}, {"text", "text value"}, {"float", 0.77},
+                {"single_choice", "one"}
+            };
+            lNewArtifact.Create(lConnection, lValues);
+            lNewArtifact.Delete(lConnection);
+        }
+
+        [Fact]
         public void CreateArtifactWithEnum()
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);

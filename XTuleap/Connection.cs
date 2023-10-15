@@ -121,15 +121,14 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Trace, lError);
-                    //TODO: use JSON.net to parse this string and look at the error message
+                    msLogger.Log(LogLevel.Error, lError);
                 }
 
-                msLogger.Log(LogLevel.Trace, lException);
+                msLogger.Log(LogLevel.Error, lException);
             }
             catch (Exception lException)
             {
-                msLogger.Log(LogLevel.Trace, lException);
+                msLogger.Log(LogLevel.Error, lException);
             }
 
             return null;
@@ -171,15 +170,14 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Trace, lError);
-                    //TODO: use JSON.net to parse this string and look at the error message
+                    msLogger.Log(LogLevel.Error, lError);
                 }
 
-                msLogger.Log(LogLevel.Trace, lException);
+                msLogger.Log(LogLevel.Error, lException);
             }
             catch (Exception lException)
             {
-                msLogger.Log(LogLevel.Trace, lException);
+                msLogger.Log(LogLevel.Error, lException);
             }
 
             return null;
@@ -222,11 +220,10 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse) lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Trace, lError);
-                    //TODO: use JSON.net to parse this string and look at the error message
+                    msLogger.Log(LogLevel.Error, lError);
                 }
 
-                msLogger.Log(LogLevel.Trace, lException);
+                msLogger.Log(LogLevel.Error, lException);
             }
 
             return null;
@@ -269,15 +266,14 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Trace, lError);
-                    //TODO: use JSON.net to parse this string and look at the error message
+                    msLogger.Log(LogLevel.Error, lError);
                 }
 
-                msLogger.Log(LogLevel.Trace, lException);
+                msLogger.Log(LogLevel.Error, lException);
             }
             catch (Exception lException)
             {
-                msLogger.Log(LogLevel.Trace, lException);
+                msLogger.Log(LogLevel.Error, lException);
             }
 
             return false;
@@ -286,8 +282,7 @@ namespace XTuleap
         /// <summary>
         ///     This method is defined to force all certifications.
         /// </summary>
-        private bool AcceptAllCertifications(object sender, X509Certificate certification, X509Chain chain,
-            SslPolicyErrors sslPolicyErrors)
+        private bool AcceptAllCertifications(object sender, X509Certificate certification, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
         }

@@ -12,6 +12,6 @@ internal class Program
         //lTest.UpdateText();
         //lTest.UpdateReferences();
         //lTest.CreateArtifactWithEnum();
-        lTest.UpdateStatus();
+        lTest.DeleteArtifact();
     }
 }
