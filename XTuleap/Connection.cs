@@ -156,6 +156,8 @@ namespace XTuleap
                 lRequestStream.Write(lData, 0, lData.Length);
                 lRequestStream.Close();
 
+                msLogger.Log(LogLevel.Debug, "PutRequest Data : " + pData);
+
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
                 Stream lReceiveStream = lWebResponse.GetResponseStream();
                 StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
@@ -208,6 +210,8 @@ namespace XTuleap
                 lRequestStream.Write(lData, 0, lData.Length);
                 lRequestStream.Close();
 
+                msLogger.Log(LogLevel.Debug, "PostRequest Data : " + pData);
+
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
                 Stream lReceiveStream = lWebResponse.GetResponseStream();
                 StreamReader lReader = new StreamReader(lReceiveStream, Encoding.UTF8);
@@ -258,6 +262,8 @@ namespace XTuleap
                 Stream lRequestStream = lRequest.GetRequestStream();
                 lRequestStream.Write(lData, 0, lData.Length);
                 lRequestStream.Close();
+
+                msLogger.Log(LogLevel.Debug, "DeleteRequest Data : " + pData);
 
                 HttpWebResponse lWebResponse = (HttpWebResponse) lRequest.GetResponse();
                 Stream lReceiveStream = lWebResponse.GetResponseStream();

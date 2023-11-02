@@ -142,7 +142,7 @@ namespace XTuleap
                 case TrackerFieldType.DateTime:
                 {
                     DateTime lValue = (DateTime) pValue;
-                    return "  {  \"field_id\": " + this.Id + ", \"value\": " + lValue.ToString("o") + "  }";
+                    return "  {  \"field_id\": " + this.Id + ", \"value\": \"" + lValue.ToString("yyyy-MM-ddTHH:mm:ss") + "\"  }";
                 }
 
                 case TrackerFieldType.String:

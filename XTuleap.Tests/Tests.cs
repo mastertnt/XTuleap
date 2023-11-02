@@ -165,13 +165,14 @@ namespace XTuleap.Tests
         [Fact]
         public void UpdateDate()
         {
+            int lTrackerId = 863;
             Connection lConnection = new Connection(this.mUri, this.mKey);
-            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(867);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(lTrackerId); // Dongle tracker.
             Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
             lTargetTracker.PreviewRequest(lConnection);
 
-            Artifact lArtifactToUpdate = new Artifact(867) { Id =  lTargetTracker.ArtifactIds.First() };
-            lArtifactToUpdate.Update(lConnection, "date", new DateTime(1977, 03, 15));
+            Artifact lArtifactToUpdate = new Artifact(lTrackerId) { Id = 35086 };
+            lArtifactToUpdate.Update(lConnection, "loan_end_date", new DateTime(1901, 12, 14, 00, 00, 00));
 
 
             //Connection lConnection1 = new Connection(this.mUri, this.mKey);
