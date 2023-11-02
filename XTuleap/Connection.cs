@@ -121,14 +121,14 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Error, lError);
+                    msLogger.Log(LogLevel.Error, lError + " Data : " + pData);
                 }
 
-                msLogger.Log(LogLevel.Error, lException);
+                msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
             }
             catch (Exception lException)
             {
-                msLogger.Log(LogLevel.Error, lException);
+                msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
             }
 
             return null;
@@ -170,14 +170,16 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Error, lError);
+                    msLogger.Log(LogLevel.Error, lError + " Data : " + pData);
                 }
-
-                msLogger.Log(LogLevel.Error, lException);
+                else
+                {
+                    msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
+                }
             }
             catch (Exception lException)
             {
-                msLogger.Log(LogLevel.Error, lException);
+                msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
             }
 
             return null;
@@ -220,10 +222,16 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse) lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Error, lError);
+                    msLogger.Log(LogLevel.Error, lError + " Data : " + pData);
                 }
-
-                msLogger.Log(LogLevel.Error, lException);
+                else
+                {
+                    msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
+                }
+            }
+            catch (Exception lException)
+            {
+                msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
             }
 
             return null;
@@ -266,14 +274,16 @@ namespace XTuleap
                     using HttpWebResponse lErrorResponse = (HttpWebResponse)lException.Response;
                     using StreamReader lReader = new StreamReader(lErrorResponse.GetResponseStream());
                     string lError = lReader.ReadToEnd();
-                    msLogger.Log(LogLevel.Error, lError);
+                    msLogger.Log(LogLevel.Error, lError + " Data : " + pData);
                 }
-
-                msLogger.Log(LogLevel.Error, lException);
+                else
+                {
+                    msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
+                }
             }
             catch (Exception lException)
             {
-                msLogger.Log(LogLevel.Error, lException);
+                msLogger.Log(LogLevel.Error, lException + " Data : " + pData);
             }
 
             return false;

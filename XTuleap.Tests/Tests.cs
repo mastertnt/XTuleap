@@ -114,13 +114,14 @@ namespace XTuleap.Tests
         [Fact]
         public void UpdateString()
         {
+            string lNewValue = "Created on 02/11/2023";
             Connection lConnection = new Connection(this.mUri, this.mKey);
             TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
             Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
             lTargetTracker.PreviewRequest(lConnection);
 
             Artifact lArtifactToUpdate = new Artifact(this.mSimpleTrackerId) {Id = lTargetTracker.ArtifactIds.First()};
-            lArtifactToUpdate.Update(lConnection, "string", "updated_string_value");
+            lArtifactToUpdate.Update(lConnection, "string", "Created on 02/11/2023");
 
 
             Connection lConnection1 = new Connection(this.mUri, this.mKey);
@@ -133,7 +134,7 @@ namespace XTuleap.Tests
             lResult.Request(lConnection1, lTargetTracker1);
 
             Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
-            Assert.Equal(lResult.GetFieldValue<string>("string"), "updated_string_value");
+            Assert.Equal(lNewValue, lResult.GetFieldValue<string>("string"));
         }
 
         [Fact]
@@ -159,6 +160,31 @@ namespace XTuleap.Tests
 
             Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
             Assert.Equal(lResult.GetFieldValue<string>("dongle_content"), this.mContent);
+        }
+
+        [Fact]
+        public void UpdateDate()
+        {
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(867);
+            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            lTargetTracker.PreviewRequest(lConnection);
+
+            Artifact lArtifactToUpdate = new Artifact(867) { Id =  lTargetTracker.ArtifactIds.First() };
+            lArtifactToUpdate.Update(lConnection, "date", new DateTime(1977, 03, 15));
+
+
+            //Connection lConnection1 = new Connection(this.mUri, this.mKey);
+            //TrackerStructure lTargetStructure1 = lConnection.AddTrackerStructure(863);
+            //Tracker<Artifact> lTargetTracker1 = new Tracker<Artifact>(lTargetStructure1);
+            //lTargetTracker1.PreviewRequest(lConnection1);
+            //Assert.Equal(lTargetTracker1.ArtifactIds.Count, lTargetTracker.ArtifactIds.Count);
+
+            //Artifact lResult = new Artifact(863) { Id = 33980 };
+            //lResult.Request(lConnection1, lTargetTracker1);
+
+            //Assert.Equal(lArtifactToUpdate.Id, lResult.Id);
+            //Assert.Equal(lResult.GetFieldValue<string>("dongle_content"), this.mContent);
         }
 
         [Fact]
