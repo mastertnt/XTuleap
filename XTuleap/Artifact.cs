@@ -231,9 +231,7 @@ namespace XTuleap
         /// <param name="pTracker">The host tracker</param>
         public virtual void Request(Connection pConnection, ITracker? pTracker = null)
         {
-            string lArtifactContent =
-                pConnection.GetRequest(
-                    "artifacts/" + this.Id + "?values_format=collection&tracker_structure_format=complete", "");
+            string lArtifactContent = pConnection.GetRequest("artifacts/" + this.Id + "?values_format=collection&tracker_structure_format=complete", "");
             TrackerStructure? lTrackerStructure = null;
             if (pTracker != null)
             {
@@ -253,7 +251,7 @@ namespace XTuleap
             {
                 if (string.IsNullOrEmpty(lArtifactContent) == false)
                 {
-                    Console.WriteLine(lArtifactContent);
+                    //Console.WriteLine(lArtifactContent);
                     JObject lObject = JsonConvert.DeserializeObject(lArtifactContent) as JObject;
                     this.TrackerName = lObject["tracker"].Value<string>("label");
                     this.TrackerId = lObject["tracker"].Value<int>("id");
