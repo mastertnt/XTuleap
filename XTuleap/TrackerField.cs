@@ -27,6 +27,7 @@ namespace XTuleap
         UpdatedOn,
         CreatedBy,
         UpdatedBy,
+        StepDefinitions,
         Unknown
     }
 
@@ -54,6 +55,7 @@ namespace XTuleap
             msTypes.Add("subby", TrackerFieldType.CreatedBy);
             msTypes.Add("lud", TrackerFieldType.UpdatedOn);
             msTypes.Add("luby", TrackerFieldType.UpdatedBy);
+            msTypes.Add("ttmstepdef", TrackerFieldType.StepDefinitions);
         }
 
         /// <summary>

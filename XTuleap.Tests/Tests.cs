@@ -231,6 +231,20 @@ namespace XTuleap.Tests
         }
 
         [Fact]
+        public void Display()
+        {
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(813);
+            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            lTargetTracker.PreviewRequest(lConnection);
+            lTargetTracker.Request(lConnection);
+            foreach (var lTrackerArtifact in lTargetTracker.Artifacts)
+            {
+                Console.WriteLine(lTrackerArtifact);
+            }
+        }
+
+        [Fact]
         public void UpdateReferences()
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);
@@ -243,8 +257,7 @@ namespace XTuleap.Tests
             int lSecond = RandomId(lTargetTracker.ArtifactIds);
 
             Artifact lArtifactToUpdate = new Artifact(this.mSimpleTrackerId) {Id = lTargetId};
-            lArtifactToUpdate.Update(lConnection, "references",
-                new List<ArtifactLink> {new ArtifactLink {Id = lFirst}, new ArtifactLink {Id = lSecond}});
+            lArtifactToUpdate.Update(lConnection, "references", new List<ArtifactLink> {new ArtifactLink {Id = lFirst}, new ArtifactLink {Id = lSecond}});
 
 
             Connection lConnection1 = new Connection(this.mUri, this.mKey);

@@ -253,6 +253,7 @@ namespace XTuleap
             {
                 if (string.IsNullOrEmpty(lArtifactContent) == false)
                 {
+                    Console.WriteLine(lArtifactContent);
                     JObject lObject = JsonConvert.DeserializeObject(lArtifactContent) as JObject;
                     this.TrackerName = lObject["tracker"].Value<string>("label");
                     this.TrackerId = lObject["tracker"].Value<int>("id");
@@ -260,8 +261,7 @@ namespace XTuleap
                     this.mDataValues.Add("xref", lObject.Value<string>("xref"));
                     foreach (TrackerField lTrackerField in lTrackerStructure.Fields)
                     {
-                        JToken lToken = lObject["values"].Children().FirstOrDefault(pToken =>
-                            pToken["field_id"] != null && pToken["field_id"].ToString() == lTrackerField.Id.ToString());
+                        JToken lToken = lObject["values"].Children().FirstOrDefault(pToken => pToken["field_id"] != null && pToken["field_id"].ToString() == lTrackerField.Id.ToString());
                         if (lToken == null)
                         {
                             this.StoreValue(lTrackerField.Name, null);
@@ -453,6 +453,7 @@ namespace XTuleap
                                             lLinks.Add(lLink);
                                         }
 
+                                        this.Links = Links;
                                         this.StoreValue(lTrackerField.Name, lLinks);
                                     }
                                     break;
@@ -481,8 +482,7 @@ namespace XTuleap
                                         string lValue = lToken.Value<string>("value");
                                         if (lValue != null)
                                         {
-                                            DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat,
-                                                CultureInfo.InvariantCulture);
+                                            DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat, CultureInfo.InvariantCulture);
                                             this.StoreValue(lTrackerField.Name, lDateTime);
                                         }
                                         else
@@ -501,8 +501,7 @@ namespace XTuleap
 
                                         if (lValue != null)
                                         {
-                                            DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat,
-                                                CultureInfo.InvariantCulture);
+                                            DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat, CultureInfo.InvariantCulture);
                                             this.StoreValue(lTrackerField.Name, lDateTime);
                                         }
                                         else
@@ -524,6 +523,25 @@ namespace XTuleap
                                     {
                                         this.StoreValue(lTrackerField.Name, lToken["value"].Value<string>("username"));
                                     }
+                                    break;
+
+                                case TrackerFieldType.StepDefinitions:
+                                    {
+                                        List<StepDefinition>? lStepDefinitions = new List<StepDefinition>();
+                                        foreach (JToken lSubToken in lToken["value"])
+                                        {
+                                            StepDefinition lStepDefinition = new StepDefinition
+                                            {
+                                                Id = lSubToken["id"].Value<int>(),
+                                                Description = lSubToken["description"].Value<string>(),
+                                                ExpectedResults = lSubToken["expected_results"].Value<string>(),
+                                                Rank = lSubToken["rank"].Value<int>()
+                                            };
+                                            lStepDefinitions.Add(lStepDefinition);
+                                        }
+
+                                        this.StoreValue(lTrackerField.Name, lStepDefinitions);
+                                    } 
                                     break;
 
                                 case TrackerFieldType.Unknown:
@@ -551,9 +569,16 @@ namespace XTuleap
             {
                 if (lDataValue.Key != "aid")
                 {
-                    if (lDataValue.Value is IEnumerable)
+                    if (lDataValue.Value is IList)
                     {
-                        lBuilder.AppendLine("[" + lDataValue.Key + "] = " + string.Join(";", lDataValue.Value));
+                        IList lList = lDataValue.Value as IList;
+                        string lValueStr = "";
+                        foreach (object lItem in lList)
+                        {
+                            lValueStr += lItem.ToString();
+                            lValueStr += "; ";
+                        }
+                        lBuilder.AppendLine("[" + lDataValue.Key + "] / " + lDataValue.Value.GetType() + " = " + lValueStr);
                     }
                     else
                     {

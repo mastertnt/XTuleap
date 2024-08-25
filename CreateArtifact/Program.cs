@@ -12,7 +12,7 @@ internal class Program
         //lTest.UpdateText();
         //lTest.UpdateReferences();
         //lTest.CreateArtifactWithEnum();
-        lTest.UpdateDate();
+        lTest.Display();
         //lTest.UpdateString();
     }
 }
