@@ -358,11 +358,18 @@ namespace XTuleap
                                     {
                                         try
                                         {
-                                            this.StoreValue(lTrackerField.Name, lToken.Value<string>("value"));
+                                            string? lValue = lToken.Value<string>("value");
+                                            if (lValue != null)
+                                            {
+                                                this.StoreValue(lTrackerField.Name, lValue);
+                                            }
+                                            else
+                                            {
+                                                this.StoreValue(lTrackerField.Name, null);
+                                            }
                                         }
                                         catch
                                         {
-                                            msLogger.Error("Error while parsing 'String' field.");
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
                                     }
@@ -372,14 +379,20 @@ namespace XTuleap
                                     {
                                         try
                                         {
-                                            var lDocument = new HtmlDocument();
-                                            lDocument.LoadHtml(lToken.Value<string>("value"));
-                                            this.StoreValue(lTrackerField.Name, lDocument.DocumentNode.InnerText.Trim());
+                                            string? lValue = lToken.Value<string>("value");
+                                            if (lValue != null)
+                                            {
+                                                var lDocument = new HtmlDocument();
+                                                lDocument.LoadHtml(lValue);
+                                                this.StoreValue(lTrackerField.Name, lDocument.DocumentNode.InnerText.Trim());
+                                            }
+                                            else
+                                            {
+                                                this.StoreValue(lTrackerField.Name, null);
+                                            }
                                         }
-
                                         catch
                                         {
-                                            msLogger.Error("Error while parsing 'Text' field.");
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
                                     }
@@ -390,7 +403,7 @@ namespace XTuleap
                                         try
                                         {
                                             string lDateFormat = DATE_TIME_FORMAT;
-                                            string lValue = lToken.Value<string>("value");
+                                            string? lValue = lToken.Value<string>("value");
                                             if (lValue != null)
                                             {
                                                 DateTime lDateTime = DateTime.ParseExact(lValue, lDateFormat, CultureInfo.InvariantCulture);
@@ -398,13 +411,10 @@ namespace XTuleap
                                             }
                                             else
                                             {
-                                                msLogger.Error("Error while parsing 'DateTime' field.");
                                                 this.StoreValue(lTrackerField.Name, null);
                                             }
                                         }
-
                                         catch
-
                                         {
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
@@ -415,11 +425,18 @@ namespace XTuleap
                                     {
                                         try
                                         {
-                                            this.StoreValue(lTrackerField.Name, lToken.Value<int>("value"));
+                                            int? lValue = lToken.Value<int>("value");
+                                            if (lValue != null)
+                                            {
+                                                this.StoreValue(lTrackerField.Name, lValue);
+                                            }
+                                            else
+                                            {
+                                                this.StoreValue(lTrackerField.Name, null);
+                                            }
                                         }
                                         catch
                                         {
-                                            msLogger.Error("Error while parsing 'Int' field.");
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
                                     }
@@ -429,11 +446,18 @@ namespace XTuleap
                                     {
                                         try
                                         {
-                                            this.StoreValue(lTrackerField.Name, lToken.Value<float>("value"));
+                                            float? lValue = lToken.Value<int>("value");
+                                            if (lValue != null)
+                                            {
+                                                this.StoreValue(lTrackerField.Name, lValue);
+                                            }
+                                            else
+                                            {
+                                                this.StoreValue(lTrackerField.Name, null);
+                                            }
                                         }
                                         catch
                                         {
-                                            msLogger.Error("Error while parsing 'Float' field.");
                                             this.StoreValue(lTrackerField.Name, null);
                                         }
                                     }
