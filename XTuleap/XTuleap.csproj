@@ -9,7 +9,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>1.9.2</AssemblyVersion>
     <FileVersion>1.9.2</FileVersion>
-    <Version>1.9.2</Version>
+    <Version>1.9.3</Version>
     <PackageReleaseNotes>1.9.2 : Support step definition type
 1.8.10 : Fix DateTime encoding</PackageReleaseNotes>
     <Nullable>enable</Nullable>
