@@ -28,13 +28,14 @@ namespace XTuleap
         CreatedBy,
         UpdatedBy,
         StepDefinitions,
+        File,
         Unknown
     }
 
     /// <summary>
     ///     This class represents a tracker field.
     /// </summary>
-    public class TrackerField
+    public class TrackerField : ITrackerField
     {
         private static readonly Dictionary<string?, TrackerFieldType> msTypes = new Dictionary<string?, TrackerFieldType>();
         
@@ -56,6 +57,7 @@ namespace XTuleap
             msTypes.Add("lud", TrackerFieldType.UpdatedOn);
             msTypes.Add("luby", TrackerFieldType.UpdatedBy);
             msTypes.Add("ttmstepdef", TrackerFieldType.StepDefinitions);
+            msTypes.Add("file", TrackerFieldType.File);
         }
 
         /// <summary>
@@ -67,28 +69,28 @@ namespace XTuleap
         }
 
         [JsonProperty("field_id")]
-        public int Id
+        public virtual int Id
         {
             get;
             set;
         }
 
         [JsonProperty("label")]
-        public string? Label
+        public virtual string? Label
         {
             get;
             set;
         }
 
         [JsonProperty("name")]
-        public string? Name
+        public virtual string? Name
         {
             get;
             set;
         }
 
         [JsonProperty("type")]
-        public string? Type
+        public virtual string? Type
         {
             get;
             set;
@@ -111,8 +113,7 @@ namespace XTuleap
             }
         }
 
-        [JsonProperty("values")]
-        public List<EnumEntry> EnumValues
+        public virtual List<EnumEntry> EnumValues
         {
             get;
             set;

@@ -80,7 +80,7 @@ namespace XTuleap
                 msLogger.Trace("AddTrackerStructure : " + lStructureRequest);
                 if (lStructureRequest != null)
                 {
-                    lStructure = JsonConvert.DeserializeObject<TrackerStructure>(lStructureRequest);
+                    lStructure = JsonConvert.DeserializeObject<TrackerStructure>(lStructureRequest, new TrackerFieldConverter());
                     this.TrackerStructures.Add(lStructure);
                     return lStructure;
                 }
