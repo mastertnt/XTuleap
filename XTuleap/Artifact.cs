@@ -470,7 +470,18 @@ namespace XTuleap
                                         {
                                             ArtifactLink lLink = new ArtifactLink
                                             {
-                                                Id = (int)lSubToken["id"]
+                                                Id = (int)lSubToken["id"],
+                                                IsReverse = false
+                                            };
+                                            lLinks.Add(lLink);
+                                        }
+
+                                        foreach (JToken lSubToken in lToken["reverse_links"])
+                                        {
+                                            ArtifactLink lLink = new ArtifactLink
+                                            {
+                                                Id = (int)lSubToken["id"],
+                                                IsReverse = true
                                             };
                                             lLinks.Add(lLink);
                                         }
@@ -489,7 +500,8 @@ namespace XTuleap
                                             ArtifactLink lLink = new ArtifactLink
                                             {
                                                 Reference = lSubToken["ref"].ToString(),
-                                                Url = lSubToken["url"].ToString()
+                                                Url = lSubToken["url"].ToString(),
+                                                IsReverse = false
                                             };
                                             lLinks.Add(lLink);
                                         }

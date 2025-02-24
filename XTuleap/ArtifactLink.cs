@@ -7,8 +7,14 @@ namespace XTuleap
     /// </summary>
     public class ArtifactLink : IComparable
     {
+        /// <summary>
+        /// Field to store the id of the link.
+        /// </summary>
         private int mId = -1;
-
+        
+        /// <summary>
+        ///    Gets or sets the id of the link.
+        /// </summary>
         public int Id
         {
             get
@@ -22,6 +28,15 @@ namespace XTuleap
                 return this.mId;
             }
             set { this.mId = value; }
+        }
+
+        /// <summary>
+        ///     Flag to indicate if the link is reverse.
+        /// </summary>
+        public bool IsReverse
+        {
+            get;
+            set;
         }
 
         /// <summary>
