@@ -214,7 +214,7 @@ namespace XTuleap
                     List<string> lLinkStr = new List<string>();
                     foreach (StepDefinition lValue in lValues)
                     {
-                        lLinkStr.Add("{\"id\" :" + lValue.Id + ", \"description\" :" + lValue.Description + ", \"expected_results\" :" + lValue.ExpectedResults + ", \"rank\" :" + lValue.Rank + '}');
+                        lLinkStr.Add("{\"id\" :" + lValue.Id + ", \"description\" :\"" + lValue.Description + "\", \"expected_results\" : \"" + lValue.ExpectedResults + "\", \"rank\" :" + lValue.Rank + '}');
                     }
 
                     return "  {  \"field_id\": " + this.Id + ", \"value\": [" + string.Join(",", lLinkStr) + "]  }";

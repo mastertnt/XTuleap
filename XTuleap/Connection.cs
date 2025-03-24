@@ -77,7 +77,6 @@ namespace XTuleap
             if (lStructure == null)
             {
                 string lStructureRequest = this.GetRequest("trackers/" + pId, "");
-                msLogger.Trace("AddTrackerStructure : " + lStructureRequest);
                 if (lStructureRequest != null)
                 {
                     lStructure = JsonConvert.DeserializeObject<TrackerStructure>(lStructureRequest, new TrackerFieldConverter());

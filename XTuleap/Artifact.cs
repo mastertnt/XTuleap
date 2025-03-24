@@ -251,7 +251,7 @@ namespace XTuleap
             {
                 if (string.IsNullOrEmpty(lArtifactContent) == false)
                 {
-                    //Console.WriteLine(lArtifactContent);
+                    Console.WriteLine(lArtifactContent);
                     JObject lObject = JsonConvert.DeserializeObject(lArtifactContent) as JObject;
                     this.TrackerName = lObject["tracker"].Value<string>("label");
                     this.TrackerId = lObject["tracker"].Value<int>("id");

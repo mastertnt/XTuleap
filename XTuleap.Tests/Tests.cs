@@ -14,9 +14,9 @@ namespace XTuleap.Tests
             two,
             three,
         }
-        private readonly string mKey = "tlp-k1-74.0938e677298d61a90d7a50246dfbce060eaa752b7298de23f5b233569aca766a";
-        private readonly int mSimpleTrackerId = 867;
-        private readonly string mUri = "https://Tuleap.net/api/";
+        private readonly string mKey = "sdf";
+        private readonly int mSimpleTrackerId = 1041;
+        private readonly string mUri = "https://xxx/api/";
 
         public readonly string mContent = "Id: 33980 ProductId :33653 UpdateTag: 0 HardwareId: 556013433 Description: Created on 20/08/2023 ClientId: 33550 CreationDate: 20/08/2023 16:37:19 CreationLogin: nby77 UpdateDate: 20/08/2023 19:04:06 UpdateLogin: nby77 SupportYear: 0 LoanEndDate: 01/01/0001 00:00:00 Type: Pro Mode: NodeLocked Feature: 33555 Feature: 33556 Feature: 33561";
 
@@ -25,12 +25,12 @@ namespace XTuleap.Tests
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);
             TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
-            Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
-            lTargetTracker.PreviewRequest(lConnection);
+            //Tracker<Artifact> lTargetTracker = new Tracker<Artifact>(lTargetStructure);
+            //lTargetTracker.PreviewRequest(lConnection);
 
             Artifact lNewArtifact = new Artifact()
             {
-                Id = 32759
+                Id = 6191
             };
             lNewArtifact.Request(lConnection);
         }
