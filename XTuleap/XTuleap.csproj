@@ -7,10 +7,11 @@
     <PackageProjectUrl>https://github.com/mastertnt/XTuleap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mastertnt/XTuleap</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.9.6</AssemblyVersion>
-    <FileVersion>1.9.6</FileVersion>
-    <Version>1.9.6</Version>
-    <PackageReleaseNotes>1.9.2 : Support step definition type
+    <AssemblyVersion>1.9.7</AssemblyVersion>
+    <FileVersion>1.9.7</FileVersion>
+    <Version>1.9.7</Version>
+    <PackageReleaseNotes>1.9.7 : Encode step definition type
+1.9.2 : Support step definition type
 1.8.10 : Fix DateTime encoding</PackageReleaseNotes>
     <Nullable>enable</Nullable>
   </PropertyGroup>

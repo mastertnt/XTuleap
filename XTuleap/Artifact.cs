@@ -581,7 +581,7 @@ namespace XTuleap
                                 case TrackerFieldType.Unknown:
 
                                     {
-                                        //Console.WriteLine("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
+                                        Console.WriteLine("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
                                     }
 
                                     break;

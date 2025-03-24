@@ -207,6 +207,19 @@ namespace XTuleap
                     return "  {  \"field_id\": " + this.Id + ", \"value\": [" + string.Join(",", lLinkStr) + "]  }";
                 }
 
+                case TrackerFieldType.StepDefinitions:
+                {
+                    List<StepDefinition> lValues = pValue as List<StepDefinition>;
+
+                    List<string> lLinkStr = new List<string>();
+                    foreach (StepDefinition lValue in lValues)
+                    {
+                        lLinkStr.Add("{\"id\" :" + lValue.Id + ", \"description\" :" + lValue.Description + ", \"expected_results\" :" + lValue.ExpectedResults + ", \"rank\" :" + lValue.Rank + '}');
+                    }
+
+                    return "  {  \"field_id\": " + this.Id + ", \"value\": [" + string.Join(",", lLinkStr) + "]  }";
+                }
+
                 default:
                 {
                     throw new NotSupportedException("Type not managed when encoding " + this.FieldType);
