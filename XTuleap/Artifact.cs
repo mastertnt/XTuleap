@@ -202,13 +202,13 @@ namespace XTuleap
             {
                 string lCreateData = "{\"tracker\": {\"id\" : " + this.TrackerId + "},";
                 lCreateData += "\"values\": [";
+                List<string> lEncodedFields = new List<string>();
                 foreach (KeyValuePair<string, object> lValue in pValues)
                 {
                     TrackerField lTrackerField = lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
                     if (lTrackerField != null)
                     {
-                        lCreateData += lTrackerField.EncodeValueField(lValue.Value);
-                        lCreateData += ",";
+                        lEncodedFields.Add(lTrackerField.EncodeValueField(lValue.Value));
                     }
                     else
                     {
@@ -216,7 +216,7 @@ namespace XTuleap
                     }
                 }
 
-                lCreateData = lCreateData.Remove(lCreateData.Length - 1);
+                lCreateData += string.Join(",", lEncodedFields);
                 lCreateData += "]}";
                 string lResult = pConnection.PostRequest("artifacts", lCreateData);
                 JObject lResponse = JObject.Parse(lResult);
@@ -243,8 +243,7 @@ namespace XTuleap
                 if (string.IsNullOrEmpty(lArtifactContent) == false)
                 {
                     JObject lObject = JsonConvert.DeserializeObject(lArtifactContent) as JObject;
-                    lTrackerStructure = pConnection.TrackerStructures.FirstOrDefault(pTrackerStructure =>
-                        pTrackerStructure.Id == (int)lObject["tracker"]["id"]);
+                    lTrackerStructure = pConnection.TrackerStructures.FirstOrDefault(pTrackerStructure => pTrackerStructure.Id == (int)lObject["tracker"]["id"]);
                 }
             }
 

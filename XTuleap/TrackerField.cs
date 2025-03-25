@@ -217,7 +217,7 @@ namespace XTuleap
                         lLinkStr.Add("{\"id\" :" + lValue.Id + ", \"description\" :\"" + lValue.Description + "\", \"description_format\": \"text\", \"expected_results_format\": \"text\", \"expected_results\" : \"" + lValue.ExpectedResults + "\", \"rank\" :" + lValue.Rank + '}');
                     }
 
-                    return "  {  \"field_id\": " + this.Id + ", \"type\": \"ttmstepdef\", \"value\": [" + string.Join(",", lLinkStr) + "]  }";
+                    return "  {  \"field_id\": " + this.Id + ", \"type\": \"ttmstepdef\", \"value\": [" + string.Join(",", lLinkStr) + "]}";
                 }
 
                 default:
