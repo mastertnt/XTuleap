@@ -357,7 +357,7 @@ namespace XTuleap
                                         }
                                         else
                                         {
-                                            this.StoreValue(lTrackerField.Name, "null");
+                                            this.StoreValue(lTrackerField.Name, new List<string?>());
                                         }
                                     }
                                     break;

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using NLog;
+using XTuleap.Extensions;
 
 namespace XTuleap
 {
@@ -38,7 +40,7 @@ namespace XTuleap
     public class TrackerField : ITrackerField
     {
         private static readonly Dictionary<string?, TrackerFieldType> msTypes = new Dictionary<string?, TrackerFieldType>();
-        
+
         static TrackerField()
         {
             msTypes.Add("int", TrackerFieldType.Int);
@@ -129,101 +131,112 @@ namespace XTuleap
             switch (this.FieldType)
             {
                 case TrackerFieldType.Int:
-                {
-                    int lValue = (int) pValue;
-                    return "  {  \"field_id\": " + this.Id + ", \"value\": " +
-                           lValue.ToString(CultureInfo.InvariantCulture) + "  }";
-                }
+                    {
+                        int lValue = (int)pValue;
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": " +
+                               lValue.ToString(CultureInfo.InvariantCulture) + "  }";
+                    }
 
                 case TrackerFieldType.Float:
-                {
-                    double lValue = (double) pValue;
-                    return "  {  \"field_id\": " + this.Id + ", \"value\": " +
-                           lValue.ToString(CultureInfo.InvariantCulture) + "  }";
-                }
+                    {
+                        double lValue = (double)pValue;
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": " +
+                               lValue.ToString(CultureInfo.InvariantCulture) + "  }";
+                    }
 
                 case TrackerFieldType.DateTime:
-                {
-                    DateTime lValue = (DateTime) pValue;
-                    return "  {  \"field_id\": " + this.Id + ", \"value\": \"" + lValue.ToString("yyyy-MM-ddTHH:mm:ss") + "\"  }";
-                }
+                    {
+                        DateTime lValue = (DateTime)pValue;
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": \"" + lValue.ToString("yyyy-MM-ddTHH:mm:ss") + "\"  }";
+                    }
 
                 case TrackerFieldType.String:
                 case TrackerFieldType.Text:
-                {
-                    return "  {  \"field_id\": " + this.Id + ", \"value\": \"" + pValue + "\"  }";
-                }
+                    {
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": \"" + pValue + "\"  }";
+                    }
 
                 case TrackerFieldType.SingleChoice:
-                {
-                    EnumEntry lFieldValue = this.EnumValues.First(pItem => pItem.Label == pValue.ToString());
-                    return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" + lFieldValue.Id + "]  }";
-                }
+                    {
+                        EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == pValue.ToString());
+                        if (lFieldValue == null)
+                        {
+                            return string.Empty;
+                        }
+                        return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" + lFieldValue.Id + "]  }";
+                    }
 
                 case TrackerFieldType.MultipleChoice:
-                {
-                    List<string> lValues = pValue as List<string>;
-                    List<int> lEntryIds = new List<int>();
-                    foreach (string lValue in lValues)
                     {
-                        EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == lValue);
-                        if (lFieldValue != null)
+                        List<string> lValues = pValue as List<string>;
+                        List<int> lEntryIds = new List<int>();
+                        foreach (string lValue in lValues)
                         {
-                            lEntryIds.Add(lFieldValue.Id);
+                            EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == lValue);
+                            if (lFieldValue != null)
+                            {
+                                lEntryIds.Add(lFieldValue.Id);
+                            }
+                        }
+
+                        if (lEntryIds.Any())
+                        {
+                            return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" +
+                                   string.Join(",", lEntryIds) + "]  }";
                         }
                     }
-
-                    if (lEntryIds.Any())
-                    {
-                        return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" +
-                               string.Join(",", lEntryIds) + "]  }";
-                    }
-                }
                     break;
 
                 case TrackerFieldType.ArtifactLinks:
-                {
-                    List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
-
-                    List<string> lLinkStr = new List<string>();
-                    foreach (ArtifactLink lValue in lValues)
                     {
-                        lLinkStr.Add("{\"id\" :" + lValue + '}');
-                    }
+                        List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
 
-                    return "  {  \"field_id\": " + this.Id + ", \"links\": [" + string.Join(",", lLinkStr) + "]  }";
-                }
+                        List<string> lLinkStr = new List<string>();
+                        foreach (ArtifactLink lValue in lValues)
+                        {
+                            lLinkStr.Add("{\"id\" :" + lValue + '}');
+                        }
+
+                        return "  {  \"field_id\": " + this.Id + ", \"links\": [" + string.Join(",", lLinkStr) + "]  }";
+                    }
 
                 case TrackerFieldType.Cross:
-                {
-                    List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
-
-                    List<string> lLinkStr = new List<string>();
-                    foreach (ArtifactLink lValue in lValues)
                     {
-                        lLinkStr.Add("{\"ref\" :" + lValue + '}');
-                    }
+                        List<ArtifactLink> lValues = pValue as List<ArtifactLink>;
 
-                    return "  {  \"field_id\": " + this.Id + ", \"value\": [" + string.Join(",", lLinkStr) + "]  }";
-                }
+                        List<string> lLinkStr = new List<string>();
+                        foreach (ArtifactLink lValue in lValues)
+                        {
+                            lLinkStr.Add("{\"ref\" :" + lValue + '}');
+                        }
+
+                        return "  {  \"field_id\": " + this.Id + ", \"value\": [" + string.Join(",", lLinkStr) + "]  }";
+                    }
 
                 case TrackerFieldType.StepDefinitions:
-                {
-                    List<StepDefinition> lValues = pValue as List<StepDefinition>;
-
-                    List<string> lLinkStr = new List<string>();
-                    foreach (StepDefinition lValue in lValues)
                     {
-                        lLinkStr.Add("{\"id\" :" + lValue.Id + ", \"description\" :\"" + lValue.Description + "\", \"description_format\": \"text\", \"expected_results_format\": \"text\", \"expected_results\" : \"" + lValue.ExpectedResults + "\", \"rank\" :" + lValue.Rank + '}');
+                        List<StepDefinition> lStepDefinitions = pValue as List<StepDefinition>;
+                        if (lStepDefinitions != null)
+                        {
+                            List<string> lLinkStr = new List<string>();
+                            foreach (StepDefinition lStepDefinition in lStepDefinitions)
+                            {
+                                string lDescriptionHtml = lStepDefinition.Description.IsHtml() ? "html" : "text";
+                                string lResultsHtml = lStepDefinition.Description.IsHtml() ? "html" : "text";
+                                var lStepData = new { id = lStepDefinition.Id, description = lStepDefinition.Description, description_format = lDescriptionHtml,  rank = lStepDefinition.Rank, expected_results = lStepDefinition.ExpectedResults, expected_results_format = lResultsHtml };
+                                lLinkStr.Add(JsonConvert.SerializeObject(lStepData));
+                            }
+
+                            return "  {  \"field_id\": " + this.Id + ", \"type\": \"ttmstepdef\", \"value\": [" + string.Join(",", lLinkStr) + "]}";
+                        }
+
+                        return "";
                     }
 
-                    return "  {  \"field_id\": " + this.Id + ", \"type\": \"ttmstepdef\", \"value\": [" + string.Join(",", lLinkStr) + "]}";
-                }
-
                 default:
-                {
-                    throw new NotSupportedException("Type not managed when encoding " + this.FieldType);
-                }
+                    {
+                        throw new NotSupportedException("Type not managed when encoding " + this.FieldType);
+                    }
             }
 
             return string.Empty;
