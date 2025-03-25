@@ -170,20 +170,26 @@ namespace XTuleap
                     {
                         List<string> lValues = pValue as List<string>;
                         List<int> lEntryIds = new List<int>();
-                        foreach (string lValue in lValues)
+                        if (lValues != null)
                         {
-                            EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == lValue);
-                            if (lFieldValue != null)
+                            foreach (string lValue in lValues)
                             {
-                                lEntryIds.Add(lFieldValue.Id);
+                                EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == lValue);
+                                if (lFieldValue != null)
+                                {
+                                    lEntryIds.Add(lFieldValue.Id);
+                                }
+                            }
+
+                            if (lEntryIds.Any())
+                            {
+                                return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" +
+                                       string.Join(",", lEntryIds) + "]  }";
                             }
                         }
 
-                        if (lEntryIds.Any())
-                        {
-                            return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" +
-                                   string.Join(",", lEntryIds) + "]  }";
-                        }
+                        return "";
+
                     }
                     break;
 
