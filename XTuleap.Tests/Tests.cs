@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Linq;
 using Xunit;
 
@@ -14,11 +16,20 @@ namespace XTuleap.Tests
             two,
             three,
         }
-        private readonly string mKey = "sdf";
+        private readonly string mKey = "tlp-k1-37.6a16b82ad03dd17da6f8d3c3df2aed2320f1ad4f593c36b770b55d151164253e";
         private readonly int mSimpleTrackerId = 1041;
-        private readonly string mUri = "https://xxx/api/";
+        private readonly string mUri = "https://lvcim.mytuleap.com/api/";
 
         public readonly string mContent = "Id: 33980 ProductId :33653 UpdateTag: 0 HardwareId: 556013433 Description: Created on 20/08/2023 ClientId: 33550 CreationDate: 20/08/2023 16:37:19 CreationLogin: nby77 UpdateDate: 20/08/2023 19:04:06 UpdateLogin: nby77 SupportYear: 0 LoanEndDate: 01/01/0001 00:00:00 Type: Pro Mode: NodeLocked Feature: 33555 Feature: 33556 Feature: 33561";
+
+        [Fact]
+        public void CreateFrom()
+        {
+            string data = "{ \"tracker\": { \"id\" : 1041}, \"values\": [  { \"field_id\": 24687, \"value\": \"Summary\"  },  { \"field_id\": 24699, \"bind_value_ids\": [7997]  },  { \"field_id\": 24689, \"type\": \"ttmstepdef\", \"value\": [{ \"id\" :1, \"description\" : \"Step1\", \"description_format\": \"text\", \"expected_results_format\": \"text\", \"expected_results\" : \"Expected1\", \"rank\" :1}]  },  { \"field_id\": 24693, \"value\": \"123\"  }]}";
+            Connection lConnection = new Connection(this.mUri, this.mKey);
+            string lResult = lConnection.PostRequest("artifacts", data);
+            JObject lResponse = JObject.Parse(lResult);
+        }
 
         [Fact]
         public void Request()
@@ -30,7 +41,7 @@ namespace XTuleap.Tests
 
             Artifact lNewArtifact = new Artifact()
             {
-                Id = 6191
+                Id = 4843
             };
             lNewArtifact.Request(lConnection);
         }

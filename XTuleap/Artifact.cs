@@ -197,22 +197,23 @@ namespace XTuleap
         /// <param name="pValues">The list of values</param>
         public void Create(Connection pConnection, Dictionary<string, object> pValues)
         {
-            TrackerStructure lStructure =
-                pConnection.TrackerStructures.FirstOrDefault(pTracker => pTracker.Id == this.TrackerId);
+            TrackerStructure lStructure = pConnection.TrackerStructures.FirstOrDefault(pTracker => pTracker.Id == this.TrackerId);
             if (lStructure != null)
             {
                 string lCreateData = "{\"tracker\": {\"id\" : " + this.TrackerId + "},";
                 lCreateData += "\"values\": [";
                 foreach (KeyValuePair<string, object> lValue in pValues)
                 {
-                    TrackerField lTrackerField =
-                        lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
+                    TrackerField lTrackerField = lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
                     if (lTrackerField != null)
                     {
                         lCreateData += lTrackerField.EncodeValueField(lValue.Value);
+                        lCreateData += ",";
                     }
-
-                    lCreateData += ",";
+                    else
+                    {
+                        msLogger.Warn("Cannot encode correctly " + lValue.Key.ToLower());
+                    }
                 }
 
                 lCreateData = lCreateData.Remove(lCreateData.Length - 1);
