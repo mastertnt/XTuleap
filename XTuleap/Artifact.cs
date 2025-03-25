@@ -208,11 +208,19 @@ namespace XTuleap
                     TrackerField lTrackerField = lStructure.Fields.FirstOrDefault(pField => pField.Name.ToLower() == lValue.Key.ToLower());
                     if (lTrackerField != null)
                     {
-                        lEncodedFields.Add(lTrackerField.EncodeValueField(lValue.Value));
+                        string lEncodedValue = lTrackerField.EncodeValueField(lValue.Value);
+                        if (string.IsNullOrEmpty(lEncodedValue) == false)
+                        {
+                            lEncodedFields.Add(lEncodedValue);
+                        }
+                        else
+                        {
+                            msLogger.Warn("Cannot encode correctly " + lValue.Key.ToLower());
+                        }
                     }
                     else
                     {
-                        msLogger.Warn("Cannot encode correctly " + lValue.Key.ToLower());
+                        msLogger.Warn("Cannot find field " + lValue.Key.ToLower());
                     }
                 }
 
