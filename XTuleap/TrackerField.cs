@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using HtmlAgilityPack;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using NLog;
 using XTuleap.Extensions;
-using XTuleap.Values;
 
 namespace XTuleap
 {

@@ -10,7 +10,6 @@ using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
-using XTuleap.Values;
 
 namespace XTuleap
 {
