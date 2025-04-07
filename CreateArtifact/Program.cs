@@ -7,7 +7,7 @@ internal class Program
     private static void Main(string[] args)
     {
         TuleapTests lTest = new();
-        lTest.CreateFrom();
+        lTest.Clone();
         //lTest.CreateSimpleArtifact();
         //lTest.UpdateText();
         //lTest.UpdateReferences();

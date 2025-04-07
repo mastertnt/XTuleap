@@ -10,6 +10,7 @@ using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
+using XTuleap.Values;
 
 namespace XTuleap
 {
@@ -74,6 +75,17 @@ namespace XTuleap
         public List<ArtifactLink>? Links { get; set; }
 
         /// <summary>
+        /// Retrieves all values.
+        /// </summary>
+        public Dictionary<string?, object?> Values
+        {
+            get
+            {
+                return this.mDataValues;
+            }
+        }
+
+        /// <summary>
         ///     Gets a field value.
         /// </summary>
         /// <param name="pFieldName">The field name.</param>
@@ -125,7 +137,7 @@ namespace XTuleap
         /// </summary>
         /// <param name="pFieldName">The field name.</param>
         /// <param name="pValue">The value to set.</param>
-        private void StoreValue(string? pFieldName, object? pValue)
+        protected void StoreValue(string? pFieldName, object? pValue)
         {
             PropertyInfo[] lPropertyInfos = this.GetType().GetProperties()
                 .Where(pProp => pProp.IsDefined(typeof(DisplayNameAttribute), false)).ToArray();
@@ -189,6 +201,30 @@ namespace XTuleap
             return pConnection.DeleteRequest("artifacts/" + this.Id, "");
         }
 
+        /// <summary>
+        /// Initializes the artifact from a core artifact.
+        /// </summary>
+        /// <param name="pArtifact">The core artifact.</param>
+        public virtual void InitializeFromTuleap(Artifact pArtifact)
+        {
+            this.Id = pArtifact.Id;
+            foreach (var lKeyValue in pArtifact.Values)
+            {
+                this.StoreValue(lKeyValue.Key, lKeyValue.Value);
+            }
+        }
+
+        /// <summary>
+        /// Creates the data on tuleap.
+        /// </summary>
+        /// <param name="pConnection">The tuleap connection</param>
+        /// <param name="pTrackerId">Id of the tracker</param>
+        public virtual void CreateTuleap(Connection pConnection, int pTrackerId = 0)
+        {
+            Artifact lArtifact = new Artifact(pTrackerId);
+            lArtifact.Create(pConnection, this.mDataValues);
+            this.Id = lArtifact.Id;
+        }
 
         /// <summary>
         ///     Creates an artifact.
@@ -281,6 +317,7 @@ namespace XTuleap
                                     }
                                     break;
 
+                                case TrackerFieldType.Radio:
                                 case TrackerFieldType.SingleChoice:
                                     {
                                         if (lToken["values"] != null && lToken["values"].Count() != 0)
@@ -317,6 +354,7 @@ namespace XTuleap
                                     }
                                     break;
 
+                                case TrackerFieldType.MultiCheckbox:
                                 case TrackerFieldType.MultipleChoice:
 
                                     {

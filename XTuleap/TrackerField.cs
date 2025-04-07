@@ -4,8 +4,10 @@ using System.Globalization;
 using System.Linq;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NLog;
 using XTuleap.Extensions;
+using XTuleap.Values;
 
 namespace XTuleap
 {
@@ -31,6 +33,7 @@ namespace XTuleap
         UpdatedBy,
         StepDefinitions,
         File,
+        MultiCheckbox,
         Unknown
     }
 
@@ -60,6 +63,7 @@ namespace XTuleap
             msTypes.Add("luby", TrackerFieldType.UpdatedBy);
             msTypes.Add("ttmstepdef", TrackerFieldType.StepDefinitions);
             msTypes.Add("file", TrackerFieldType.File);
+            msTypes.Add("cb", TrackerFieldType.MultiCheckbox);
         }
 
         /// <summary>
@@ -126,7 +130,7 @@ namespace XTuleap
         /// </summary>
         /// <param name="pValue">The value to encode.</param>
         /// <returns>The encoded value.</returns>
-        public string EncodeValueField(object pValue)
+        public string EncodeValueField(object? pValue)
         {
             switch (this.FieldType)
             {
@@ -156,6 +160,16 @@ namespace XTuleap
                         return "  {  \"field_id\": " + this.Id + ", \"value\": \"" + pValue + "\"  }";
                     }
 
+                case TrackerFieldType.Radio:
+                    {
+                        EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == pValue.ToString());
+                        if (lFieldValue == null)
+                        {
+                            return string.Empty;
+                        }
+                        return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" + lFieldValue.Id + "]  }";
+                    }
+                    break;
                 case TrackerFieldType.SingleChoice:
                     {
                         EnumEntry lFieldValue = this.EnumValues.FirstOrDefault(pItem => pItem.Label == pValue.ToString());
@@ -166,6 +180,7 @@ namespace XTuleap
                         return "  {  \"field_id\": " + this.Id + ", \"bind_value_ids\": [" + lFieldValue.Id + "]  }";
                     }
 
+                case TrackerFieldType.MultiCheckbox:
                 case TrackerFieldType.MultipleChoice:
                     {
                         List<string> lValues = pValue as List<string>;
@@ -229,7 +244,7 @@ namespace XTuleap
                             {
                                 string lDescriptionHtml = lStepDefinition.Description.IsHtml() ? "html" : "text";
                                 string lResultsHtml = lStepDefinition.Description.IsHtml() ? "html" : "text";
-                                var lStepData = new { id = lStepDefinition.Id, description = lStepDefinition.Description, description_format = lDescriptionHtml,  rank = lStepDefinition.Rank, expected_results = lStepDefinition.ExpectedResults, expected_results_format = lResultsHtml };
+                                var lStepData = new { id = lStepDefinition.Id, description = lStepDefinition.Description, description_format = lDescriptionHtml, rank = lStepDefinition.Rank, expected_results = lStepDefinition.ExpectedResults, expected_results_format = lResultsHtml };
                                 lLinkStr.Add(JsonConvert.SerializeObject(lStepData));
                             }
 
@@ -239,10 +254,21 @@ namespace XTuleap
                         return "";
                     }
 
+                case TrackerFieldType.CreatedBy:
+                case TrackerFieldType.CreatedOn:
+                case TrackerFieldType.UpdatedBy:
+                case TrackerFieldType.UpdatedOn:
+                    {
+                        // Ignored
+                    }
+                    break;
+
+
                 default:
                     {
-                        throw new NotSupportedException("Type not managed when encoding " + this.FieldType);
+                        Console.WriteLine("Type not managed when encoding " + this.FieldType);
                     }
+                    break;
             }
 
             return string.Empty;

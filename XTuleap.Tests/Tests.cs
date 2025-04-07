@@ -16,19 +16,25 @@ namespace XTuleap.Tests
             two,
             three,
         }
-        private readonly string mKey = "tlp-k1-37.ddd";
-        private readonly int mSimpleTrackerId = 1041;
-        private readonly string mUri = "https://xxx.xxx.com/api/";
-
+        private readonly string mKey = "";
+        private readonly int mSimpleTrackerId = 1164;
+        private readonly string mUri = "";
         public readonly string mContent = "Id: 33980 ProductId :33653 UpdateTag: 0 HardwareId: 556013433 Description: Created on 20/08/2023 ClientId: 33550 CreationDate: 20/08/2023 16:37:19 CreationLogin: nby77 UpdateDate: 20/08/2023 19:04:06 UpdateLogin: nby77 SupportYear: 0 LoanEndDate: 01/01/0001 00:00:00 Type: Pro Mode: NodeLocked Feature: 33555 Feature: 33556 Feature: 33561";
 
         [Fact]
-        public void CreateFrom()
+        public void Clone()
         {
-            string data = "{ \"tracker\": { \"id\" : 1041}, \"values\": [  { \"field_id\": 24687, \"value\": \"Summary\"  },  { \"field_id\": 24699, \"bind_value_ids\": [7997]  },  { \"field_id\": 24689, \"type\": \"ttmstepdef\", \"value\": [{ \"id\" :1, \"description\" : \"Step1\", \"description_format\": \"text\", \"expected_results_format\": \"text\", \"expected_results\" : \"Expected1\", \"rank\" :1}]  },  { \"field_id\": 24693, \"value\": \"123\"  }]}";
             Connection lConnection = new Connection(this.mUri, this.mKey);
-            string lResult = lConnection.PostRequest("artifacts", data);
-            JObject lResponse = JObject.Parse(lResult);
+            TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            Artifact lNewArtifact = new Artifact()
+            {
+                Id = 8265
+            };
+            lNewArtifact.Request(lConnection);
+
+            Artifact lTestCase = new Artifact();
+            lTestCase.InitializeFromTuleap(lNewArtifact);
+            lTestCase.CreateTuleap(lConnection, this.mSimpleTrackerId);
         }
 
         [Fact]

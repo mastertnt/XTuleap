@@ -76,7 +76,7 @@ namespace XTuleap.API2
         /// Initialize the artifact from a core artifact.
         /// </summary>
         /// <param name="pArtifact">The core artifact.</param>
-        public virtual void InitializeFromTuleap(Artifact pArtifact)
+        public override void InitializeFromTuleap(Artifact pArtifact)
         {
             this.Id = pArtifact.Id;
             IEnumerable<PropertyInfo> lProperties = this.GetType().GetProperties().Where(pProperty => pProperty.IsDefined(typeof(TuleapField), false));

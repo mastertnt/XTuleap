@@ -20,8 +20,10 @@ namespace XTuleap
 
             switch (type)
             {
+                case "rb":
                 case "sb":
                 case "msb":
+                case "cb":
                     return new TrackerFieldEnum();
                 default:
                     return new TrackerField();
