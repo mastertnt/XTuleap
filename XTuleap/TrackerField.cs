@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
+using NLog;
 using XTuleap.Extensions;
 
 namespace XTuleap
@@ -39,6 +40,11 @@ namespace XTuleap
     public class TrackerField : ITrackerField
     {
         private static readonly Dictionary<string?, TrackerFieldType> msTypes = new Dictionary<string?, TrackerFieldType>();
+
+        /// <summary>
+        /// Logger of the class.
+        /// </summary>
+        private static readonly Logger msLogger = LogManager.GetCurrentClassLogger();
 
         static TrackerField()
         {
@@ -254,6 +260,8 @@ namespace XTuleap
                 case TrackerFieldType.CreatedOn:
                 case TrackerFieldType.UpdatedBy:
                 case TrackerFieldType.UpdatedOn:
+                case TrackerFieldType.Unknown:
+                case TrackerFieldType.File:
                     {
                         // Ignored
                     }
@@ -262,7 +270,7 @@ namespace XTuleap
 
                 default:
                     {
-                        Console.WriteLine("Type not managed when encoding " + this.FieldType);
+                        msLogger.Error("Type not managed when encoding " + this.FieldType);
                     }
                     break;
             }

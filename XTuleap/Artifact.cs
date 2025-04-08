@@ -182,7 +182,7 @@ namespace XTuleap
                     {
                         msLogger.Error("An error occured during update of " + lTrackerField.Name);
                     }
-                    
+
                 }
 
                 return true;
@@ -247,10 +247,6 @@ namespace XTuleap
                         if (string.IsNullOrEmpty(lEncodedValue) == false)
                         {
                             lEncodedFields.Add(lEncodedValue);
-                        }
-                        else
-                        {
-                            msLogger.Warn("Cannot encode correctly " + lValue.Key.ToLower());
                         }
                     }
                     else
@@ -619,15 +615,21 @@ namespace XTuleap
                                         }
 
                                         this.StoreValue(lTrackerField.Name, lStepDefinitions);
-                                    } 
+                                    }
                                     break;
 
+
+                                case TrackerFieldType.File:
                                 case TrackerFieldType.Unknown:
-
                                     {
-                                        Console.WriteLine("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
+                                        // Ignored
                                     }
+                                    break;
 
+                                default:
+                                    {
+                                        msLogger.Error("Type of field " + lTrackerField.Name + " non managed : " + lTrackerField.Type);
+                                    }
                                     break;
                             }
                         }

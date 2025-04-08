@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,6 +26,7 @@ namespace XTuleap.Tests
         {
             Connection lConnection = new Connection(this.mUri, this.mKey);
             TrackerStructure lTargetStructure = lConnection.AddTrackerStructure(this.mSimpleTrackerId);
+            TrackerStructure lTargetStructure2 = lConnection.AddTrackerStructure(1167);
             Artifact lNewArtifact = new Artifact()
             {
                 Id = 8265
@@ -34,7 +35,7 @@ namespace XTuleap.Tests
 
             Artifact lTestCase = new Artifact();
             lTestCase.InitializeFromTuleap(lNewArtifact);
-            lTestCase.CreateTuleap(lConnection, this.mSimpleTrackerId);
+            lTestCase.CreateTuleap(lConnection, 1167);
         }
 
         [Fact]
