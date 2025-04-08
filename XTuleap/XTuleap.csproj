@@ -7,10 +7,10 @@
     <PackageProjectUrl>https://github.com/mastertnt/XTuleap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mastertnt/XTuleap</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.11.2</AssemblyVersion>
-    <FileVersion>1.11.2</FileVersion>
-    <Version>1.11.2</Version>
-    <PackageReleaseNotes>1.11.2 : Support new types
+    <AssemblyVersion>1.11.4</AssemblyVersion>
+    <FileVersion>1.11.4</FileVersion>
+    <Version>1.11.4</Version>
+    <PackageReleaseNotes>1.11.4 : Support new types
 1.10.1 .: Encode step definition type / API V2
 1.9.2 : Decode step definition type
 1.8.10 : Fix DateTime encoding</PackageReleaseNotes>
