@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -97,6 +98,7 @@ namespace XTuleap
         public void PreviewRequest(Connection pConnection)
         {
             this.Artifacts.Clear();
+            this.ArtifactIds = new ObservableCollection<int>();
 
             try
             {
@@ -118,16 +120,38 @@ namespace XTuleap
                 throw;
             }
 
-            string lIds;
             try
             {
-                lIds = pConnection.GetRequest("trackers/" + this.Structure.Id + "/artifacts?limit=1000", "");
-                if (string.IsNullOrEmpty(lIds) == false)
+                bool lContinue = true;
+                int lOffset = 0;
+                while (lContinue)
                 {
-                    msLogger.Debug("Content to deserialize : " + lIds);
-                    List<TArtifactType> lResult = JsonConvert.DeserializeObject<List<TArtifactType>>(lIds);
-                    this.ArtifactIds = new ObservableCollection<int>(lResult.Select(pItem => pItem.Id));
+                    var lIds = pConnection.GetRequest("trackers/" + this.Structure.Id + "/artifacts?limit=100&offset="+ lOffset, "");
+                    if (string.IsNullOrEmpty(lIds) == false)
+                    {
+                        msLogger.Debug("Content to deserialize : " + lIds);
+                        List<TArtifactType> lResult = JsonConvert.DeserializeObject<List<TArtifactType>>(lIds);
+                        if (lResult == null || lResult.Count < 100)
+                        {
+                            lContinue = false;
+                        }
+                        else
+                        {
+                            lOffset += 100;
+                        }
+
+                        foreach (var lId in lResult.Select(pItem => pItem.Id))
+                        {
+                            this.ArtifactIds.Add(lId);
+                        }
+                    }
+                    else
+                    {
+                        lContinue = false;
+                    }
                 }
+                msLogger.Debug("Read artifacts count " + this.ArtifactIds.Count);
+                
             }
             catch (Exception e)
             {
